@@ -20,47 +20,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include"node.h"
-#include"hash.h"
-#include"helper.h"
+#include "hash.h"
 
-#include <iostream>
-#include <string>
-#include <sstream>
-using namespace std;
+//the hash function used to create node ids
+unsigned long long oat_hash(const char *p, int len)
+{
+  unsigned long long h = 0;
+  int i;
 
-/* The main module represnting a peer.
- * INPUT: port number, list of all machines on the Chord network
- * ACTION: setup this node, connect to next and prev nodes, interact with user to share/search for files
- */
-int main(int argc, char* argv[]){
-
-  if(argc < 3){
-    cout << "Incorrect ususage!!" << endl;
-    cout << "./main <port> <file.txt>" << endl;
-    cout << "<port> : refers to the port to use for connecting to the chord network" << endl;
-    cout << "<file.txt> : needs to have all peers in this network in form of" << endl;
-    cout << "\t<ip> <port> " << endl;
-    cout << "\tone on each line." << endl;
-    return 0;
+  for (i = 0; i < len; i++)
+  {
+    h += p[i];
+    h += (h << 10);
+    h ^= (h >> 6);
   }
 
-  string ip;
-  int port;
+  h += (h << 3);
+  h ^= (h >> 11);
+  h += (h << 15);
 
-  //extract the input from args
-  stringstream ss;
-  ss << argv[1];
-  ss >> port;
-  ss.clear();
+  return h;
+}
 
-  ip = getIP();
-  cout << "IP is : " << ip << endl;
-  cout << "Reading port as : " << port << endl;
-  if(port <= 0 || port > 65535){
-    cout << "Specified port is invalid. Try again." << endl;
-    return 0;
-  }
-  
-  return 0;
+//simple wrapper on actual hash function to standardize name
+unsigned long long hash(const char *p, int len){
+  return oat_hash(p, len);
 }

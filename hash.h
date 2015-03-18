@@ -20,27 +20,10 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+// hashing functions
+
 //the hash function used to create node ids
-unsigned long long oat_hash(const char *p, int len)
-{
-  unsigned long long h = 0;
-  int i;
-
-  for (i = 0; i < len; i++)
-  {
-    h += p[i];
-    h += (h << 10);
-    h ^= (h >> 6);
-  }
-
-  h += (h << 3);
-  h ^= (h >> 11);
-  h += (h << 15);
-
-  return h;
-}
+unsigned long long oat_hash(const char *p, int len);
 
 //simple wrapper on actual hash function to standardize name
-unsigned long long hash(const char *p, int len){
-  return oat_hash(p, len);
-}
+unsigned long long hash(const char *p, int len);
