@@ -23,8 +23,39 @@
 #include"node.h"
 #include"hash.h"
 
-#include<iostream>
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
 
+/* The main module represnting a peer.
+ * INPUT: port number, list of all machines on the Chord network
+ * ACTION: setup this node, connect to next and prev nodes, interact with user to share/search for files
+ */
 int main(int argc, char* argv[]){
+
+  if(argc < 3){
+    cout << "Incorrect ususage!!" << endl;
+    cout << "./main <port> <file.txt>" << endl;
+    cout << "<port> : refers to the port to use for connecting to the chord network" << endl;
+    cout << "<file.txt> : needs to have all peers in this network in form of" << endl;
+    cout << "\t<ip> <port> " << endl;
+    cout << "\tone on each line." << endl;
+    return 0;
+  }
+
+  string ip;
+  int port;
+  stringstream ss;
+  ss << argv[1];
+  ss >> port;
+  ss.clear();
+
+  cout << "Reading port as : " << port << endl;
+  if(port <= 0 || port > 65535){
+    cout << "Specified port is invalid. Try again." << endl;
+    return 0;
+  }
+  
   return 0;
 }

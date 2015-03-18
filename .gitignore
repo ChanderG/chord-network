@@ -1,6 +1,5 @@
 *.pdf
 *.swp
-server
-client
 p2p_server
 p2p_client
+main
