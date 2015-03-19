@@ -33,3 +33,11 @@ Node :: Node(std::string ip, int port){
   this->ip = ip;
   this->port = port;
 }
+
+/*
+ * Set value of id
+ * INPUT: externally hashed value
+ */
+void Node::setID(identifier id){
+  this->id = id;
+}

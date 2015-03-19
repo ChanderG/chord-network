@@ -40,9 +40,15 @@ class Node{
   int port;
 
   public:
-  /* Main constructor
+  /*
+   * Main constructor
    * INPUT: Normalized ip and port
    */
   Node(std::string ip, int port);
 
+  /*
+   * Set value of id
+   * INPUT: externally hashed value
+   */
+  void setID(identifier id);
 };

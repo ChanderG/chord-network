@@ -71,5 +71,7 @@ int main(int argc, char* argv[]){
   identifier id = hashfunc(ipport.c_str(), ipport.length());
   cout << "Identifier hash is " << id << endl;
 
+  self.setID(id);
+
   return 0;
 }
