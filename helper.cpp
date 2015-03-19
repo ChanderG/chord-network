@@ -63,7 +63,7 @@ void readConfiguration(int &n, int &m, list<Node> &nodes){
   string line;
   stringstream ss;
   string ip;
-  string port;
+  int port;
 
   string commentPrefix = ";";
   string param_chordSize = "chordSize";
@@ -80,27 +80,40 @@ void readConfiguration(int &n, int &m, list<Node> &nodes){
       line.erase(0, param_chordSize.length());   
       ss << line;
       ss >> n;
+      ss.clear();
+      cout << "Extracted n: " << n << endl;
     }
 
     if(line.compare(0, param_numPeers.length(), param_numPeers) == 0){
       line.erase(0, param_numPeers.length());   
       ss << line;
       ss >> m;
+      ss.clear();
+      cout << "Extracted m: " << m << endl;
 
       //also read the next m lines for the nodes
       for(int i = 0;i < m; i++){
-	if(getline(configfile, line) != 1){
+	if(!getline(configfile, line)){
 	  //incomplete config file
 	  cout << "Bad config file!!" << endl;
 	  exit(1);
         }
+
         //create the node and add it to the list 
+        ss << line;
+	ss >> ip;
+	ss >> port;
+	ss.clear();
+
+	cout << "Reads " << ip << " : " << port << endl;
+
+	Node newnode(ip, port);
+        nodes.push_back(newnode);
+
+	break;
       }
     }
-
-    
   }
 
   configfile.close();
-  cout << "Extracted n: " << n << endl;
 }
