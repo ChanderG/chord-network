@@ -26,4 +26,4 @@
 unsigned long long oat_hash(const char *p, int len);
 
 //simple wrapper on actual hash function to standardize name
-unsigned long long hash(const char *p, int len);
+unsigned long long hashfunc(const char *p, int len);

@@ -63,5 +63,13 @@ int main(int argc, char* argv[]){
   }
 
   Node self(ip,port);
+
+  string ipport;
+  ipport = ip + string(":") + to_string(port);
+  cout << "Identifier string is " << ipport << endl;
+
+  identifier id = hashfunc(ipport.c_str(), ipport.length());
+  cout << "Identifier hash is " << id << endl;
+
   return 0;
 }

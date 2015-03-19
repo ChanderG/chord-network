@@ -20,14 +20,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* Main Node class
- * Lightweight. Need to normalize the values outside
+/*
+ * Node class and related stuff
  */
 
 #include <string>
 
+/*
+ * Simple type for identifier
+ */
+typedef unsigned long long identifier;
+
+/* Main Node class  
+ * Lightweight. Need to normalize the values outside
+ */
 class Node{
-  unsigned long long id;  //unique identifier depending on m,n
+  identifier id;  //unique identifier depending on m,n
   std::string ip;
   int port;
 
