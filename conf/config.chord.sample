@@ -1,0 +1,14 @@
+; Sample config.chord file
+; To use this file, change the values and name the file "config.chord" 
+
+; All lines beginning with ';' are considered as comments. 
+
+chordSize 5
+numPeers 5
+127.0.0.1 2000
+127.0.0.1 3000
+127.0.0.1 4000
+127.0.0.1 5000
+127.0.0.1 6000
+
+; DO NOT ADD ANY SPACING OR NEWLINES

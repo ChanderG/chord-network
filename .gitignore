@@ -3,3 +3,4 @@
 p2p_server
 p2p_client
 main
+conf/config.chord

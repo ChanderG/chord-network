@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <list>
 #include <cstdlib>
 
@@ -54,5 +55,15 @@ void readConfiguration(int &n, int &m, list<Node> &nodes){
     cout << "Rename config.chord.test to config.chord for a sample chord file." << endl;
     exit(1);
   }
+
+  cout << "Config file found. Loading configuration." << endl;
+
+  //parse the file
+  string line;
+
+  while(getline(configfile, line)){
+    cout << line << endl;
+  }
+
   configfile.close();
 }
