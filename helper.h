@@ -34,6 +34,12 @@ using namespace std;
 string getIP(void);
 
 /*
+ * INPUT: ip and port
+ * OUTPUT: the hashed value, assuming a "ip:port" string system
+ */
+identifier hashNode(string ip, int port);
+
+/*
  * Reads the "conf/config.chord" file and parses out the chord network information.
  * INPUT: reference variables to store 
  * 	m     : the number of peers/nodes

@@ -22,6 +22,7 @@
 
 #include "helper.h"
 
+#include "hash.h"
 
 #include <iostream>
 #include <fstream>
@@ -37,6 +38,20 @@ using namespace std;
 std::string getIP(void){
   std::string ip = "127.0.0.1";
   return ip;
+}
+
+/*
+ * INPUT: ip and port
+ * OUTPUT: the hashed value, assuming a "ip:port" string system
+ */
+identifier hashNode(string ip, int port){
+  string ipport;
+  ipport = ip + string(":") + to_string(port);
+  //cout << "Identifier string is " << ipport << endl;
+
+  identifier id = hashfunc(ipport.c_str(), ipport.length());
+
+  return id;
 }
 
 /*
@@ -108,10 +123,11 @@ void readConfiguration(int &n, int &m, list<Node> &nodes){
 	cout << "Reads " << ip << " : " << port << endl;
 
 	Node newnode(ip, port);
+	newnode.setID(hashNode(ip,port));
         nodes.push_back(newnode);
 
-	break;
       }
+      break;
     }
   }
 
