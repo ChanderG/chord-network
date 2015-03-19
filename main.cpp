@@ -25,8 +25,10 @@
 #include "helper.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <sstream>
+#include <list>
 using namespace std;
 
 /* The main module represnting a peer.
@@ -35,13 +37,16 @@ using namespace std;
  */
 int main(int argc, char* argv[]){
 
-  if(argc < 3){
+  if(argc < 2){
     cout << "Incorrect ususage!!" << endl;
-    cout << "./main <port> <file.txt>" << endl;
+    cout << "./main <port>" << endl;
     cout << "<port> : refers to the port to use for connecting to the chord network" << endl;
+    cout << "Note a valid config.chord file needs to be present for the software to work correctly." << endl;
+    /*
     cout << "<file.txt> : needs to have all peers in this network in form of" << endl;
     cout << "\t<ip> <port> " << endl;
     cout << "\tone on each line." << endl;
+    */
     return 0;
   }
 
@@ -73,5 +78,10 @@ int main(int argc, char* argv[]){
 
   self.setID(id);
 
+  int n;  // the chord size 
+  int m;  // the number of nodes in the network 
+  list<Node> nodes;
+
+  readConfiguration(n, m, nodes);
   return 0;
 }

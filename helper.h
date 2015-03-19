@@ -22,8 +22,23 @@
 
 //Place for misc helper functions.
 
+#include "node.h"
+
 #include <string>
+#include <list>
+
+using namespace std;
 
 //to get IP address of the current machine
 //OUTPUT: the IP address as a string
-std::string getIP(void);
+string getIP(void);
+
+/*
+ * Reads the "conf/config.chord" file and parses out the chord network information.
+ * INPUT: reference variables to store 
+ * 	m     : the number of peers/nodes
+ * 	n     : the size of the chord
+ * 	nodes : the list of nodes extracted from the file 
+ * ACTION: parses out the info and stores them in these variables 	
+ */
+void readConfiguration(int &n, int &m, list<Node> &nodes);

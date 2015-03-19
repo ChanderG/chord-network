@@ -23,6 +23,8 @@
 /*
  * Node class and related stuff
  */
+#ifndef NODE_H
+#define NODE_H
 
 #include <string>
 
@@ -52,3 +54,5 @@ class Node{
    */
   void setID(identifier id);
 };
+
+#endif

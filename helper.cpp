@@ -22,9 +22,37 @@
 
 #include "helper.h"
 
+
+#include <iostream>
+#include <fstream>
+#include <list>
+#include <cstdlib>
+
+using namespace std;
+
 //to get IP address of the current machine
 //OUTPUT: the IP address as a string
 std::string getIP(void){
   std::string ip = "127.0.0.1";
   return ip;
+}
+
+/*
+ * Reads the "conf/config.chord" file and parses out the chord network information.
+ * INPUT: reference variables to store 
+ * 	m     : the number of peers/nodes
+ * 	n     : the size of the chord
+ * 	nodes : the list of nodes extracted from the file 
+ * ACTION: parses out the info and stores them in these variables 	
+ */
+void readConfiguration(int &n, int &m, list<Node> &nodes){
+  //try to read config file
+  ifstream configfile;
+  configfile.open("conf/config.chord", ios::in);
+  if(!configfile.good()){
+    cout << "Config file does not exist!!" << endl;  
+    cout << "Rename config.chord.test to config.chord for a sample chord file." << endl;
+    exit(1);
+  }
+  configfile.close();
 }
