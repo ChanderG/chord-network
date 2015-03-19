@@ -20,7 +20,21 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-//Main Node class
+/* Main Node class
+ * Lightweight. Need to normalize the values outside
+ */
+
+#include <string>
+
 class Node{
-  unsigned long long id;
+  unsigned long long id;  //unique identifier depending on m,n
+  std::string ip;
+  int port;
+
+  public:
+  /* Main constructor
+   * INPUT: Normalized ip and port
+   */
+  Node(std::string ip, int port);
+
 };
