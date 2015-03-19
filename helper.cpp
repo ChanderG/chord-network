@@ -26,6 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <list>
 #include <cstdlib>
 
@@ -60,10 +61,46 @@ void readConfiguration(int &n, int &m, list<Node> &nodes){
 
   //parse the file
   string line;
+  stringstream ss;
+  string ip;
+  string port;
+
+  string commentPrefix = ";";
+  string param_chordSize = "chordSize";
+  string param_numPeers = "numPeers";
 
   while(getline(configfile, line)){
-    cout << line << endl;
+
+    // commented out lines 
+    if(line.compare(0, commentPrefix.length(), commentPrefix) == 0){
+      continue;
+    }
+
+    if(line.compare(0, param_chordSize.length(), param_chordSize) == 0){
+      line.erase(0, param_chordSize.length());   
+      ss << line;
+      ss >> n;
+    }
+
+    if(line.compare(0, param_numPeers.length(), param_numPeers) == 0){
+      line.erase(0, param_numPeers.length());   
+      ss << line;
+      ss >> m;
+
+      //also read the next m lines for the nodes
+      for(int i = 0;i < m; i++){
+	if(getline(configfile, line) != 1){
+	  //incomplete config file
+	  cout << "Bad config file!!" << endl;
+	  exit(1);
+        }
+        //create the node and add it to the list 
+      }
+    }
+
+    
   }
 
   configfile.close();
+  cout << "Extracted n: " << n << endl;
 }

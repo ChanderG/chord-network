@@ -11,4 +11,4 @@ numPeers 5
 127.0.0.1 5000
 127.0.0.1 6000
 
-; DO NOT ADD ANY SPACING OR NEWLINES
+; DO NOT add any spacing or newlines between the config lines.
