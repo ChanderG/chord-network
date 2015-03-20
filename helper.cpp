@@ -133,3 +133,41 @@ void readConfiguration(int &n, int &m, list<Node> &nodes){
 
   configfile.close();
 }
+
+/*
+ * Setup the predecessor and successor links
+ * Also checks of the node is in the config file.
+ * INPUT: 
+ * 	self  : reference to main node
+ * 	nodes : list of nodes in SORTED order
+ */ 	
+void setupPredAndSucc(Node &self, list<Node> &nodes){
+  bool presence = false;   //to see if self has an entry in the config file
+ 
+  //setup predecessor and successor nodes
+  for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
+    if(it->getSimpleId() == self.getSimpleId()){
+      presence = true;
+      if(it == nodes.begin()){
+	self.setPredecessor(&*prev(end(nodes)));
+	self.setSuccessor(&*next(it));
+      }
+      else if(it == prev(nodes.end())){
+	self.setPredecessor(&*prev(it));
+	self.setSuccessor(&*begin(nodes));
+      }
+      else{
+	self.setPredecessor(&*prev(it));
+	self.setSuccessor(&*next(it));
+      }
+      break;
+    }
+  }
+
+  if(presence == false){
+    //not there
+    cout << "This node is not there in the config file. " << endl;
+    cout << "Update the file and try again. " << endl;
+    exit(0);
+  }
+}

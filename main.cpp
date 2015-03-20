@@ -103,33 +103,7 @@ int main(int argc, char* argv[]){
     exit(0);
   }
 
-  bool presence = false;   //to see if self has an entry in the config file
- 
-  for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
-    if(it->getSimpleId() == self.getSimpleId()){
-      presence = true;
-      if(it == nodes.begin()){
-	self.setPredecessor(&*end(nodes));
-	self.setSuccessor(&*next(it));
-      }
-      else if(it == nodes.end()){
-	self.setPredecessor(&*prev(it));
-	self.setSuccessor(&*begin(nodes));
-      }
-      else{
-	self.setPredecessor(&*prev(it));
-	self.setSuccessor(&*next(it));
-      }
-      break;
-    }
-  }
-
-  if(presence == false){
-    //not there
-    cout << "This node is not there in the config file. " << endl;
-    cout << "Update the file and try again. " << endl;
-    exit(0);
-  }
+  setupPredAndSucc(self, nodes);
 
   cout << "Predecessor node: " << self.getPredecessor()->getSimpleId() << endl;
   cout << "Successor node: " << self.getSuccessor()->getSimpleId() << endl;

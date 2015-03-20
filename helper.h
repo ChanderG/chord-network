@@ -48,3 +48,12 @@ identifier hashNode(string ip, int port);
  * ACTION: parses out the info and stores them in these variables 	
  */
 void readConfiguration(int &n, int &m, list<Node> &nodes);
+
+/*
+ * Setup the predecessor and successor links
+ * Also checks of the node is in the config file.
+ * INPUT: 
+ * 	self  : reference to main node
+ * 	nodes : list of nodes in SORTED order
+ */ 	
+void setupPredAndSucc(Node &self, list<Node> &nodes); 
