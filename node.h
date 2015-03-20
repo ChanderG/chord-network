@@ -42,12 +42,20 @@ class Node{
   std::string ip;
   int port;
 
+  Node *predecessor;
+  Node *successor;
+
   public:
   /*
    * Main constructor
    * INPUT: Normalized ip and port
    */
   Node(std::string ip, int port);
+
+  /*
+   * get the address of the node in ip:port form
+   */
+  std::string getAddress();
 
   /*
    * Set value of id
@@ -70,6 +78,26 @@ class Node{
    * Simple getval function
    */
   int getSimpleId();
+
+  /*
+   * set predecessor
+   */
+  void setPredecessor(Node* pred);
+
+  /*
+   * simple getval 
+   */
+  Node* getPredecessor();
+
+  /*
+   * set successor
+   */
+  void setSuccessor(Node* succ);
+
+  /*
+   * simple getval 
+   */
+  Node* getSuccessor();
 };
 
 /* 

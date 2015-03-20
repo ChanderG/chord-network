@@ -26,6 +26,8 @@
 
 #include <string>
 
+using namespace std;
+
 /* Main constructor
  * INPUT: Normalized ip and port
  */
@@ -34,6 +36,15 @@ Node :: Node(std::string ip, int port){
   this->port = port;
   this->id = 0;
   this->simpleId = 0;
+}
+
+/*
+ * get the address of the node in ip:port form
+ */
+std::string Node::getAddress(){
+  std::string addr;
+  addr = ip + string(":") + to_string(port);
+  return addr;
 }
 
 /*
@@ -65,6 +76,38 @@ void Node::setSimpleId(int chordLength){
 int Node::getSimpleId(){
   return simpleId;
 }
+
+/*
+ * set predecessor
+ */
+void Node::setPredecessor(Node* pred){
+  this->predecessor = pred;
+}
+
+/*
+ * simple getval 
+ */
+Node* Node::getPredecessor(){
+  return predecessor;
+}
+
+/*
+ * set successor
+ */
+void Node::setSuccessor(Node* succ){
+  this->successor = succ;
+}
+
+/*
+ * simple getval 
+ */
+Node* Node::getSuccessor(){
+  return successor;
+}
+
+
+
+/************************* OTHER FUNCTIONS ***************************/
 
 /* 
  * Compare function for 2 nodes based on simpleId. For sorting.

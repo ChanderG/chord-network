@@ -81,19 +81,17 @@ int main(int argc, char* argv[]){
   readConfiguration(n, m, nodes);
   int chordLength = pow(2, n);
 
+  self.setSimpleId(chordLength);
   cout << "Looping the nodes around the chord." << endl;
   for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
     it->setSimpleId(chordLength); 
-    //cout << it->getID() <<  " " << it->getSimpleId() << endl;
   }
 
   nodes.sort(compare_simpleId);   //sort according to simpleId
 
-  /*
   for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
-    cout << it->getSimpleId() << endl;
+    cout << it->getAddress() <<  " " << it->getID() << " " << it->getSimpleId() << endl;
   }
-  */
 
   int org = nodes.size();
   nodes.unique(equal_simpleId);   //reduce to unique elements; according to simpleId
@@ -104,6 +102,37 @@ int main(int argc, char* argv[]){
     cout << "Increace the chordLength/chordSize and try again." << endl;
     exit(0);
   }
+
+  bool presence = false;   //to see if self has an entry in the config file
+ 
+  for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
+    if(it->getSimpleId() == self.getSimpleId()){
+      presence = true;
+      if(it == nodes.begin()){
+	self.setPredecessor(&*end(nodes));
+	self.setSuccessor(&*next(it));
+      }
+      else if(it == nodes.end()){
+	self.setPredecessor(&*prev(it));
+	self.setSuccessor(&*begin(nodes));
+      }
+      else{
+	self.setPredecessor(&*prev(it));
+	self.setSuccessor(&*next(it));
+      }
+      break;
+    }
+  }
+
+  if(presence == false){
+    //not there
+    cout << "This node is not there in the config file. " << endl;
+    cout << "Update the file and try again. " << endl;
+    exit(0);
+  }
+
+  cout << "Predecessor node: " << self.getPredecessor()->getSimpleId() << endl;
+  cout << "Successor node: " << self.getSuccessor()->getSimpleId() << endl;
 
   return 0;
 }
