@@ -67,8 +67,15 @@ int Node::getSimpleId(){
 }
 
 /* 
- * Compare function for 2 nodes based on simpleId
+ * Compare function for 2 nodes based on simpleId. For sorting.
  */
 bool compare_simpleId(Node &first, Node &second){
   return (first.getSimpleId() < second.getSimpleId());
+}
+
+/* 
+ * Equality function for 2 nodes based on simpleId. For uniqueness testing.
+ */
+bool equal_simpleId(Node &first, Node &second){
+  return (first.getSimpleId() == second.getSimpleId());
 }

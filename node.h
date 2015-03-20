@@ -77,4 +77,9 @@ class Node{
  */
 bool compare_simpleId(Node& first, Node& second);
 
+/* 
+ * Equality function for 2 nodes based on simpleId. For uniqueness testing.
+ */
+bool equal_simpleId(Node &first, Node &second);
+
 #endif

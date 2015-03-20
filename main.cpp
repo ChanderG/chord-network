@@ -84,10 +84,26 @@ int main(int argc, char* argv[]){
   cout << "Looping the nodes around the chord." << endl;
   for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
     it->setSimpleId(chordLength); 
-    cout << it->getID() <<  " " << it->getSimpleId() << endl;
+    //cout << it->getID() <<  " " << it->getSimpleId() << endl;
   }
 
-  nodes.sort(compare_simpleId);
+  nodes.sort(compare_simpleId);   //sort according to simpleId
+
+  /*
+  for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
+    cout << it->getSimpleId() << endl;
+  }
+  */
+
+  int org = nodes.size();
+  nodes.unique(equal_simpleId);   //reduce to unique elements; according to simpleId
+  int fin = nodes.size();
+  //if duplicates in simpleId exist, the chordLength or the hash func is not good enough
+  if(org != fin){
+    cout << "ERROR: 2 nodes seem to have the same simpleId. This is illegal." << endl;
+    cout << "Increace the chordLength/chordSize and try again." << endl;
+    exit(0);
+  }
 
   return 0;
 }
