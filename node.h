@@ -53,6 +53,11 @@ class Node{
    * INPUT: externally hashed value
    */
   void setID(identifier id);
+
+  /*
+   * Simple getval function
+   */
+  identifier getID();
 };
 
 #endif

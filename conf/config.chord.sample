@@ -3,12 +3,14 @@
 
 ; All lines beginning with ';' are considered as comments. 
 
-chordSize 5
+chordSize 6
 numPeers 5
-127.0.0.1 2000
-127.0.0.1 3000
-127.0.0.1 4000
-127.0.0.1 5000
-127.0.0.1 6000
+127.0.0.1 1041
+127.0.0.1 2803
+127.0.0.1 4491
+127.0.0.1 5607
+127.0.0.1 6375
 
+; This is an example that has somewhat uniform distribution of nodes.
 ; DO NOT add any spacing or newlines between the config lines.
+; It is absoulutely essential that all peers should have the exact same config file.

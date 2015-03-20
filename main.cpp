@@ -29,6 +29,7 @@
 #include <string>
 #include <sstream>
 #include <list>
+#include <cmath>
 using namespace std;
 
 /* The main module represnting a peer.
@@ -75,8 +76,13 @@ int main(int argc, char* argv[]){
 
   int n;  // the chord size 
   int m;  // the number of nodes in the network 
-  list<Node> nodes;
+  list<Node> nodes;  //the m nodes 
 
   readConfiguration(n, m, nodes);
+  int chordLength = pow(2, n);
+
+  for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
+    cout << (*it).getID() <<  " " << (*it).getID()%chordLength << endl;
+  }
   return 0;
 }

@@ -41,3 +41,10 @@ Node :: Node(std::string ip, int port){
 void Node::setID(identifier id){
   this->id = id;
 }
+
+/*
+ * Simple getval function
+ */
+identifier Node::getID(){
+  return id;
+}
