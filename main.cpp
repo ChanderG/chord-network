@@ -81,8 +81,13 @@ int main(int argc, char* argv[]){
   readConfiguration(n, m, nodes);
   int chordLength = pow(2, n);
 
+  cout << "Looping the nodes around the chord." << endl;
   for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
-    cout << (*it).getID() <<  " " << (*it).getID()%chordLength << endl;
+    it->setSimpleId(chordLength); 
+    cout << it->getID() <<  " " << it->getSimpleId() << endl;
   }
+
+  nodes.sort(compare_simpleId);
+
   return 0;
 }

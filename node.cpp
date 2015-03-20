@@ -20,7 +20,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-/* Member definitions of Node class
+/* Member definitions of Node class. Other node related functions
  */
 #include "node.h"
 
@@ -32,6 +32,8 @@
 Node :: Node(std::string ip, int port){
   this->ip = ip;
   this->port = port;
+  this->id = 0;
+  this->simpleId = 0;
 }
 
 /*
@@ -47,4 +49,26 @@ void Node::setID(identifier id){
  */
 identifier Node::getID(){
   return id;
+}
+
+/*
+ * Set simpleID based on chordLength.
+ * INPUT: chordLength: the number of slots in the circular chord
+ */
+void Node::setSimpleId(int chordLength){
+  simpleId = id%chordLength;
+}
+
+/*
+ * Simple getval function
+ */
+int Node::getSimpleId(){
+  return simpleId;
+}
+
+/* 
+ * Compare function for 2 nodes based on simpleId
+ */
+bool compare_simpleId(Node &first, Node &second){
+  return (first.getSimpleId() < second.getSimpleId());
 }

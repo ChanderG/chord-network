@@ -38,6 +38,7 @@ typedef unsigned long long identifier;
  */
 class Node{
   identifier id;  //unique identifier depending on m,n
+  int simpleId;   //modulo of id pertaining to the current chord network
   std::string ip;
   int port;
 
@@ -58,6 +59,22 @@ class Node{
    * Simple getval function
    */
   identifier getID();
+
+  /*
+   * Set simpleID based on chordLength.
+   * INPUT: chordLength: the number of slots in the circular chord
+   */
+  void setSimpleId(int chordLength);
+
+  /*
+   * Simple getval function
+   */
+  int getSimpleId();
 };
+
+/* 
+ * Compare function for 2 nodes based on simpleId
+ */
+bool compare_simpleId(Node& first, Node& second);
 
 #endif
