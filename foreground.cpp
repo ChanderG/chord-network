@@ -31,4 +31,31 @@ using namespace std;
  */
 void manageNodeTerminal(int &chordLength, Node &self){
   cout << "Node user interface work." << endl;
+
+  int choice;
+
+  while(1){
+    cout << "***Main Menu***" << endl;
+    cout << "1. Search for file" << endl;
+    cout << "2. Share a file" << endl;
+    cout << "3. Quit" << endl;
+    cout << "Enter choice: ";
+
+    cin >> choice;
+    switch(choice){
+      case 1: {
+		break;
+              }		
+      case 2: {
+		break;
+              }		
+      case 3: {
+		return;
+              }		
+      default: cout << " Invalid option." << endl;
+    }
+    cout << "WIP." << endl;
+  }
+
+  return;
 }
