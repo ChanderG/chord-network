@@ -23,6 +23,8 @@
 #include "node.h"
 #include "hash.h"
 #include "helper.h"
+#include "background.h"
+#include "foreground.h"
 
 #include <iostream>
 #include <fstream>
@@ -33,14 +35,6 @@
 #include <thread>
 
 using namespace std;
-
-void manageChord(){
-  cout << "Chord background work." << endl;
-}
-
-void manageNodeTerminal(){
-  cout << "Node user interface work." << endl;
-}
 
 /* The main module represnting a peer.
  * INPUT: port number, list of all machines on the Chord network
