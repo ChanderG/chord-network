@@ -30,7 +30,17 @@
 #include <sstream>
 #include <list>
 #include <cmath>
+#include <thread>
+
 using namespace std;
+
+void manageChord(){
+  cout << "Chord background work." << endl;
+}
+
+void manageNodeTerminal(){
+  cout << "Node user interface work." << endl;
+}
 
 /* The main module represnting a peer.
  * INPUT: port number, list of all machines on the Chord network
@@ -108,5 +118,13 @@ int main(int argc, char* argv[]){
   cout << "Predecessor node: " << self.getPredecessor()->getSimpleId() << endl;
   cout << "Successor node: " << self.getSuccessor()->getSimpleId() << endl;
 
+  thread background(manageChord);  
+  thread foreground(manageNodeTerminal);  
+
+  foreground.join();
+  cout << "Shutting down node terminal." << endl;
+  background.join();
+
   return 0;
+
 }
