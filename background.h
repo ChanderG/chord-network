@@ -25,7 +25,10 @@
  * in the Chord network.
  */
 
+#include "node.h"
+
 /*
  * Main function
+ * INPUT: the chord length and the current node
  */
-void manageChord();
+void manageChord(int &chordLength, Node &self);

@@ -27,7 +27,8 @@ using namespace std;
 
 /*
  * Main user terminal
+ * INPUT: the chord length and the current node
  */
-void manageNodeTerminal(){
+void manageNodeTerminal(int &chordLength, Node &self){
   cout << "Node user interface work." << endl;
 }

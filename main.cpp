@@ -112,8 +112,8 @@ int main(int argc, char* argv[]){
   cout << "Predecessor node: " << self.getPredecessor()->getSimpleId() << endl;
   cout << "Successor node: " << self.getSuccessor()->getSimpleId() << endl;
 
-  thread background(manageChord);  
-  thread foreground(manageNodeTerminal);  
+  thread background(manageChord, chordLength, self);  
+  thread foreground(manageNodeTerminal, chordLength, self);  
 
   foreground.join();
   cout << "Shutting down node terminal." << endl;

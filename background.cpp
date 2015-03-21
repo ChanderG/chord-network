@@ -27,7 +27,8 @@ using namespace std;
 
 /*
  * Main function
+ * INPUT: the chord length and the current node
  */
-void manageChord(){
-  cout << "Chord background work." << endl;
+void manageChord(int &chordLength, Node &self){
+  cout << "Chord maintainance work." << endl;
 }

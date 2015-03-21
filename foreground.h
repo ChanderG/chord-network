@@ -25,7 +25,10 @@
  * All functions needed for Node - User communications.
  */
 
+#include "node.h"
+
 /*
  * Main user terminal
+ * INPUT: the chord length and the current node
  */
-void manageNodeTerminal();
+void manageNodeTerminal(int &chordLength, Node &self);
