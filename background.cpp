@@ -22,13 +22,48 @@
 
 #include "background.h"
 
+#include "communication.h"
+
 #include <iostream>
+#include <sys/select.h>
 using namespace std;
 
 /*
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self){
+void manageChord(int &chordLength, Node &self, int &predSockFd, struct addrinfo* &predAddrInfo, int &succSockFd, struct addrinfo* &succAddrInfo){
   cout << "Chord maintainance work." << endl;
+
+  //ready to select one of 2 sockets
+  fd_set nset;
+  FD_ZERO(&nset);
+
+  FD_SET(predSockFd, &nset);
+  FD_SET(succSockFd, &nset);
+
+  int maxfd;
+  if(predSockFd > succSockFd){
+    maxfd = predSockFd;
+  }
+  else{
+    maxfd = succSockFd;
+  }
+  
+  int result;
+
+  while(1){
+    result = select(maxfd+1, &nset, NULL, NULL, NULL);
+    if(-1 == result){
+      cout << "Error in select. " << endl;
+      exit(1);
+    }
+    else{
+      if(FD_ISSET(predSockFd, &nset)){
+      }
+
+      if(FD_ISSET(succSockFd, &nset)){
+      }
+    }
+  }
 }
