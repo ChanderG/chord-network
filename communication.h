@@ -34,6 +34,12 @@
 enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE };
 
 /*
+ * Some constants for eshtablishing uniformity in communictaions.
+ */
+#define MAXFILENAME 256
+#define MAXIPLEN 16
+
+/*
  * Main communication data type - to store info
  * Has Meta info for up and down traversal in the chord network
  * Fields are used in different ways for different types.
@@ -60,8 +66,8 @@ enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE };
 struct Comm{
   comm_type type;
   int src;
-  char ipaddr[16];
-  char filename[256];
+  char ipaddr[MAXIPLEN];
+  char filename[MAXFILENAME];
   int filehash;
   char comment[256];
 };

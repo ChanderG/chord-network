@@ -23,6 +23,8 @@
 #include "foreground.h"
 
 #include <iostream>
+#include <cstdio>
+#include <cstring>
 using namespace std;
 
 /*
@@ -32,7 +34,34 @@ void handleShare(int &chordLength, Node &self){
   string fileName;
   cout << "Enter file name: "; 
   cin >> fileName;
-  cout << "WIP" << endl;
+
+  if(fileName.length() >= MAXFILENAME){
+    cout << "Filename too long. " << endl;
+    return;
+  }
+
+  //hash the string
+  int filehash = hashfunc(fileName.c_str(), fileName.length());
+  //mod it to this chord network
+  filehash %= chordLength;
+
+  cout << "Hashing file: " << fileName << " to " << filehash << endl;
+
+  //check if the file needs to be added to this very node
+
+  //else compose a message and send it on
+  Comm mess;
+  mess.type = REQ_SHARE;
+  mess.src = self.getSimpleId();
+
+  bzero(mess.filename, MAXFILENAME);
+  strcpy(mess.filename, fileName.c_str());
+
+  bzero(mess.ipaddr, MAXIPLEN);
+  strcpy(mess.ipaddr, self.getIp().c_str());
+  
+  mess.filehash = filehash;
+
   return;
 }
 
@@ -47,6 +76,9 @@ void manageNodeTerminal(int &chordLength, Node &self){
   int choice;
 
   while(1){
+    //safety value; to prevent endless loop
+    choice = 0;  
+
     cout << "***Main Menu***" << endl;
     cout << "1. Search for file" << endl;
     cout << "2. Share a file" << endl;

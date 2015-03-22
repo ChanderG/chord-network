@@ -26,6 +26,8 @@
  */
 
 #include "node.h"
+#include "communication.h"
+#include "hash.h"
 
 /*
  * Main user terminal
