@@ -83,6 +83,8 @@ void manageNodeTerminal(int &chordLength, Node &self, int &succSockFd, struct ad
   cout << "Node user interface work." << endl;
 
   int choice;
+  int result;
+  fd_set read_fds;
 
   while(1){
     //safety value; to prevent endless loop
@@ -92,21 +94,33 @@ void manageNodeTerminal(int &chordLength, Node &self, int &succSockFd, struct ad
     cout << "1. Search for file" << endl;
     cout << "2. Share a file" << endl;
     cout << "3. Quit" << endl;
-    cout << "Enter choice: ";
+    cout << "Enter choice: " << endl;
 
-    cin >> choice;
-    switch(choice){
-      case 1: {
-		break;
-              }		
-      case 2: {
-		handleShare(chordLength, self, succSockFd, succAddrInfo);
-		break;
-              }		
-      case 3: {
-		return;
-              }		
-      default: cout << " Invalid option." << endl;
+    
+    FD_ZERO(&read_fds);
+    FD_SET(STDIN_FILENO, &read_fds);
+    result = select(STDIN_FILENO + 1, &read_fds, NULL, NULL, NULL);
+    if(result == -1){
+      cout << "Error" << endl;
+      continue;
+    }
+
+    if(FD_ISSET(STDIN_FILENO, &read_fds)){
+      //cin >> choice;
+      scanf("%d", &choice);
+      switch(choice){
+	case 1: {
+		  break;
+		}		
+	case 2: {
+		  handleShare(chordLength, self, succSockFd, succAddrInfo);
+		  break;
+		}		
+	case 3: {
+		  return;
+		}		
+	default: cout << " Invalid option." << endl;
+      }
     }
   }
 

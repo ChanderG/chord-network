@@ -35,7 +35,8 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &predSockFd, st
 
   Comm mess;
   recvComm(predSockFd, predAddrInfo, mess);
-  if(mess.type == REQ_SEARCH){
+
+  if(mess.type == REQ_SHARE){
     //check if the file needs to be added to this node
     if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
       //index the file here itself
@@ -50,9 +51,8 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &predSockFd, st
       //forward the message
       sendComm(succSockFd, succAddrInfo, mess);
     }
-
   }
-  else if(mess.type == REQ_SHARE){
+  else if(mess.type == REQ_SEARCH){
 
   }
   else{
@@ -76,10 +76,6 @@ void manageChord(int &chordLength, Node &self, int &predSockFd, struct addrinfo*
 
   //ready to select one of 2 sockets
   fd_set nset;
-  FD_ZERO(&nset);
-
-  FD_SET(predSockFd, &nset);
-  FD_SET(succSockFd, &nset);
 
   int maxfd;
   if(predSockFd > succSockFd){
@@ -92,6 +88,10 @@ void manageChord(int &chordLength, Node &self, int &predSockFd, struct addrinfo*
   int result;
 
   while(1){
+    FD_ZERO(&nset);
+
+    FD_SET(predSockFd, &nset);
+    FD_SET(succSockFd, &nset);
     result = select(maxfd+1, &nset, NULL, NULL, NULL);
     if(-1 == result){
       cout << "Error in select. " << endl;
@@ -99,6 +99,7 @@ void manageChord(int &chordLength, Node &self, int &predSockFd, struct addrinfo*
     }
     else{
       if(FD_ISSET(predSockFd, &nset)){
+	cout << "Incomming connection from pred." << endl;
 	handleConnectionsFromPred(chordLength, self, predSockFd, predAddrInfo, succSockFd, succAddrInfo);
       }
 

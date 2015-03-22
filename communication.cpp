@@ -34,8 +34,8 @@
  * INPUT: the socket fd, the socket addrinfo and the message structure 
  */
 void sendComm(int &sockfd, struct addrinfo* &p, Comm &msg){
-
-  if(-1 == sendto(sockfd, (void *)&msg, sizeof(msg), 0, p->ai_addr, p->ai_addrlen)){
+  printf("In send\n");
+  if(-1 == sendto(sockfd, &msg, sizeof(msg), 0, p->ai_addr, p->ai_addrlen)){
     perror("Problems in connecting to peer: ");
     exit(0);
   }
@@ -47,7 +47,7 @@ void sendComm(int &sockfd, struct addrinfo* &p, Comm &msg){
  */
 void recvComm(int &sockfd, struct addrinfo* &p, Comm &msg){
 
-  if(-1 == recvfrom(sockfd, (void *)&msg, sizeof(msg), 0, p->ai_addr, &(p->ai_addrlen))){
+  if(-1 == recvfrom(sockfd, &msg, sizeof(msg), 0, p->ai_addr, &(p->ai_addrlen))){
     perror("recvfrom");  
     exit(1);
   }

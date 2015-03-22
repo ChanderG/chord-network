@@ -188,7 +188,7 @@ void initSockets(Node &self, int &predSockFd, int &succSockFd, struct addrinfo* 
   hints.ai_socktype = SOCK_DGRAM;
 
   //for predecessor
-  if(0 != getaddrinfo((self.getPredecessor()->getIp()).c_str(), to_string(self.getSuccessor()->getPort()).c_str(), &hints, &servinfo)){
+  if(0 != getaddrinfo((self.getPredecessor()->getIp()).c_str(), to_string(self.getPredecessor()->getPort()).c_str(), &hints, &servinfo)){
     perror("getaddrinfo");
     exit(1);
   }
