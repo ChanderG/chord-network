@@ -229,3 +229,13 @@ void initSockets(Node &self, int &predSockFd, int &succSockFd, struct addrinfo* 
   //sockets on both sides up and running
 }
 
+/*
+ * Close both sockets.
+ */
+void closeSockets(int &predSockFd, int &succSockFd){
+
+  close(predSockFd);
+  close(succSockFd);
+  cout << "All sockets closed." << endl;
+}
+

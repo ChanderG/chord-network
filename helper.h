@@ -67,3 +67,8 @@ void setupPredAndSucc(Node &self, list<Node> &nodes);
  * 	  predAddrInfo, succAddrInfo : resp socket address info 
  */	  
 void initSockets(Node &self,int &predSockFd, int &succSockFd, struct addrinfo* &predAddrInfo, struct addrinfo* &succAddrInfo);
+
+/*
+ * Close both sockets.
+ */
+void closeSockets(int &predSockFd, int &succSockFd);

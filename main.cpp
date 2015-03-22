@@ -127,6 +127,8 @@ int main(int argc, char* argv[]){
   cout << "Shutting down node terminal." << endl;
   background.join();
 
+  closeSockets(predSockFd, succSockFd);
+
   return 0;
 
 }
