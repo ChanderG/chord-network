@@ -41,9 +41,9 @@ void handleShare(int &chordLength, Node &self, int &succSockFd, struct addrinfo*
   }
 
   //hash the string
-  int filehash = hashfunc(fileName.c_str(), fileName.length());
+  identifier fh = hashfunc(fileName.c_str(), fileName.length());
   //mod it to this chord network
-  filehash %= chordLength;
+  int filehash = fh % chordLength;
 
   cout << "Hashing file: " << fileName << " to " << filehash << endl;
 
@@ -69,6 +69,7 @@ void handleShare(int &chordLength, Node &self, int &succSockFd, struct addrinfo*
   mess.filehash = filehash;
 
   sendComm(succSockFd, succAddrInfo, mess);
+  cout << "Sent to successor" << endl;
 
   return;
 }
