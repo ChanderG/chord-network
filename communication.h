@@ -29,11 +29,41 @@
 #include <netdb.h> 
 
 /*
+ * Identifier of class of message.
+ */
+enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE };
+
+/*
  * Main communication data type - to store info
  * Has Meta info for up and down traversal in the chord network
+ * Fields are used in different ways for different types.
+ *
+ * type : REQ_SEARCH
+ * src : node which requests file
+ * filename : name of file requested
+ * filehash : hash of file modded for this chord network
+ *
+ * type : REP_SEARCH
+ * src : node which wants the file
+ * ipaddr : ip of machine with the required file
+ *
+ * type : REQ_SHARE
+ * src : node that is sharing / has the file
+ * ipaddr : ip addr of node with the file
+ * filename : name of file being shared
+ * filehash : hash of file modded for this chord network
+ *
+ * type : REP_SHARE
+ * src : orig node; where the reply must be sent to
+ * comment : any extra comments; say file indexing success
  */
 struct Comm{
-
+  comm_type type;
+  int src;
+  char ipaddr[16];
+  char filename[256];
+  int filehash;
+  char comment[256];
 };
 
 
