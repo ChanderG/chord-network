@@ -46,7 +46,7 @@ class Node{
   Node *predecessor;
   Node *successor;
 
-  map<string,string> index;
+  std::map<std::string,std::string> index;
 
   public:
   /*

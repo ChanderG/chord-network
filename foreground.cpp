@@ -30,7 +30,7 @@ using namespace std;
 /*
  * Handle sharing. Needs to take inputs
  */
-void handleShare(int &chordLength, Node &self){
+void handleShare(int &chordLength, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo){
   string fileName;
   cout << "Enter file name: "; 
   cin >> fileName;
@@ -68,6 +68,8 @@ void handleShare(int &chordLength, Node &self){
   
   mess.filehash = filehash;
 
+  sendComm(succSockFd, succAddrInfo, mess);
+
   return;
 }
 
@@ -76,7 +78,7 @@ void handleShare(int &chordLength, Node &self){
  * Main user terminal
  * INPUT: the chord length and the current node
  */
-void manageNodeTerminal(int &chordLength, Node &self){
+void manageNodeTerminal(int &chordLength, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo){
   cout << "Node user interface work." << endl;
 
   int choice;
@@ -97,7 +99,7 @@ void manageNodeTerminal(int &chordLength, Node &self){
 		break;
               }		
       case 2: {
-		handleShare(chordLength, self);
+		handleShare(chordLength, self, succSockFd, succAddrInfo);
 		break;
               }		
       case 3: {

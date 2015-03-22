@@ -121,7 +121,7 @@ int main(int argc, char* argv[]){
   initSockets(self, predSockFd, succSockFd, predAddrInfo, succAddrInfo);
 
   thread background(manageChord, chordLength, self);  
-  thread foreground(manageNodeTerminal, chordLength, self);  
+  thread foreground(manageNodeTerminal, chordLength, self, succSockFd, succAddrInfo);  
 
   foreground.join();
   cout << "Shutting down node terminal." << endl;
