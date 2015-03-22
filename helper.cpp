@@ -30,6 +30,7 @@
 #include <sstream>
 #include <list>
 #include <cstdlib>
+#include <cstring>
 
 using namespace std;
 
@@ -171,3 +172,60 @@ void setupPredAndSucc(Node &self, list<Node> &nodes){
     exit(0);
   }
 }
+
+/*
+ * Init UDP sockets to both predecessor and successor.
+ * INPUT: predSockFd, succSockFd     : respective socket descriptors
+ * 	  predAddrInfo, succAddrInfo : resp socket address info 
+ */	  
+void initSockets(Node &self, int &predSockFd, int &succSockFd, struct addrinfo* &predAddrInfo, struct addrinfo* &succAddrInfo){
+
+  cout << "Initializing sockets." << endl;
+  struct addrinfo hints, *servinfo;
+
+  bzero(&hints, sizeof(hints));
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_DGRAM;
+
+  //for predecessor
+  if(0 != getaddrinfo((self.getPredecessor()->getIp()).c_str(), to_string(self.getSuccessor()->getPort()).c_str(), &hints, &servinfo)){
+    perror("getaddrinfo");
+    exit(1);
+  }
+
+  for(predAddrInfo = servinfo; predAddrInfo!= NULL; predAddrInfo = predAddrInfo->ai_next){
+    if(-1 == (predSockFd = socket(predAddrInfo->ai_family, predAddrInfo->ai_socktype, predAddrInfo->ai_protocol))){
+      perror("socket");
+      continue;
+    }
+    break;
+  }
+
+  if(predAddrInfo == NULL){
+    cout << "Failed to create socket to predecessor. Check if the node is up" << endl;
+    exit(1);
+  }
+
+  //for successor
+  if(0 != getaddrinfo((self.getSuccessor()->getIp()).c_str(), to_string(self.getSuccessor()->getPort()).c_str(), &hints, &servinfo)){
+    perror("getaddrinfo");
+    exit(1);
+  }
+
+  for(succAddrInfo = servinfo; succAddrInfo!= NULL; succAddrInfo = succAddrInfo->ai_next){
+    if(-1 == (succSockFd = socket(succAddrInfo->ai_family, succAddrInfo->ai_socktype, succAddrInfo->ai_protocol))){
+      perror("socket");
+      continue;
+    }
+    break;
+  }
+
+  if(succAddrInfo == NULL){
+    cout << "Failed to create socket to succecessor. Check if the node is up" << endl;
+    exit(1);
+  }
+
+  freeaddrinfo(servinfo);
+  //sockets on both sides up and running
+}
+

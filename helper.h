@@ -26,6 +26,9 @@
 
 #include <string>
 #include <list>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h> 
 
 using namespace std;
 
@@ -57,3 +60,10 @@ void readConfiguration(int &n, int &m, list<Node> &nodes);
  * 	nodes : list of nodes in SORTED order
  */ 	
 void setupPredAndSucc(Node &self, list<Node> &nodes); 
+
+/*
+ * Init UDP sockets to both predecessor and successor.
+ * INPUT: predSockFd, succSockFd     : respective socket descriptors
+ * 	  predAddrInfo, succAddrInfo : resp socket address info 
+ */	  
+void initSockets(Node &self,int &predSockFd, int &succSockFd, struct addrinfo* &predAddrInfo, struct addrinfo* &succAddrInfo);

@@ -105,6 +105,19 @@ Node* Node::getSuccessor(){
   return successor;
 }
 
+/*
+ * Getval for ip
+ */
+std::string Node::getIp(){
+  return ip;
+}
+
+/*
+ * Getval for port
+ */
+int Node::getPort(){
+  return port;
+}
 
 
 /************************* OTHER FUNCTIONS ***************************/

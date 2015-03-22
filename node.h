@@ -53,6 +53,17 @@ class Node{
   Node(std::string ip, int port);
 
   /*
+   * Getval for ip
+   */
+  std::string getIp();
+
+  /*
+   * Getval for port
+   */
+  int getPort();
+
+
+  /*
    * get the address of the node in ip:port form
    */
   std::string getAddress();

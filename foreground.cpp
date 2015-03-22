@@ -26,6 +26,18 @@
 using namespace std;
 
 /*
+ * Handle sharing. Needs to take inputs
+ */
+void handleShare(int &chordLength, Node &self){
+  string fileName;
+  cout << "Enter file name: "; 
+  cin >> fileName;
+  cout << "WIP" << endl;
+  return;
+}
+
+
+/*
  * Main user terminal
  * INPUT: the chord length and the current node
  */
@@ -47,6 +59,7 @@ void manageNodeTerminal(int &chordLength, Node &self){
 		break;
               }		
       case 2: {
+		handleShare(chordLength, self);
 		break;
               }		
       case 3: {
@@ -54,7 +67,6 @@ void manageNodeTerminal(int &chordLength, Node &self){
               }		
       default: cout << " Invalid option." << endl;
     }
-    cout << "WIP." << endl;
   }
 
   return;
