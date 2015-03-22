@@ -29,6 +29,44 @@
 using namespace std;
 
 /*
+ * Handles all connections from behind. Namely all REQuests.
+ */
+void handleConnectionsFromPred(int &chordLength, Node &self, int &predSockFd, struct addrinfo* &predAddrInfo, int &succSockFd, struct addrinfo* &succAddrInfo){
+
+  Comm mess;
+  recvComm(predSockFd, predAddrInfo, mess);
+  if(mess.type == REQ_SEARCH){
+    //check if the file needs to be added to this node
+    if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
+      //index the file here itself
+      self.addToIndex(string(mess.ipaddr), string(mess.filename));
+
+      cout << "File indexed. " << endl;
+
+      //send a reply
+    }
+    else{
+      //forward the message
+      sendComm(succSockFd, succAddrInfo, mess);
+    }
+
+  }
+  else if(mess.type == REQ_SHARE){
+
+  }
+  else{
+    //defn an error
+    //handle it
+  }
+}
+
+/*
+ * Handles all connections from ahead. Namely all REPlys.
+ */
+void handleConnectionsFromSucc(int &chordLength, Node &self, int &predSockFd, struct addrinfo* &predAddrInfo, int &succSockFd, struct addrinfo* &succAddrInfo){
+}
+
+/*
  * Main function
  * INPUT: the chord length and the current node
  */
@@ -60,9 +98,11 @@ void manageChord(int &chordLength, Node &self, int &predSockFd, struct addrinfo*
     }
     else{
       if(FD_ISSET(predSockFd, &nset)){
+	handleConnectionsFromPred(chordLength, self, predSockFd, predAddrInfo, succSockFd, succAddrInfo);
       }
 
       if(FD_ISSET(succSockFd, &nset)){
+	handleConnectionsFromSucc(chordLength, self, predSockFd, predAddrInfo, succSockFd, succAddrInfo);
       }
     }
   }
