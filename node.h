@@ -27,6 +27,7 @@
 #define NODE_H
 
 #include <string>
+#include <map>
 
 /*
  * Simple type for identifier
@@ -44,6 +45,8 @@ class Node{
 
   Node *predecessor;
   Node *successor;
+
+  map<string,string> index;
 
   public:
   /*
@@ -109,6 +112,11 @@ class Node{
    * simple getval 
    */
   Node* getSuccessor();
+
+  /*
+   * Add an <ip, filename> entry to this index
+   */
+  void addToIndex(std::string ip, std::string filename);
 };
 
 /* 

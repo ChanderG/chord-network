@@ -119,6 +119,13 @@ int Node::getPort(){
   return port;
 }
 
+/*
+ * Add an <ip, filename> entry to this index
+ */
+void Node::addToIndex(std::string ip, std::string filename){
+  index.insert(pair<string, string>(ip, filename));
+}
+
 
 /************************* OTHER FUNCTIONS ***************************/
 

@@ -48,6 +48,12 @@ void handleShare(int &chordLength, Node &self){
   cout << "Hashing file: " << fileName << " to " << filehash << endl;
 
   //check if the file needs to be added to this very node
+  if((filehash > self.getPredecessor()->getSimpleId()) && (filehash <= self.getSimpleId())){
+    //index the file here itself
+    self.addToIndex(self.getIp(), fileName);
+    cout << "Indexed" << endl;
+    return;
+  }
 
   //else compose a message and send it on
   Comm mess;
