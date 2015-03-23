@@ -42,8 +42,7 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &s
       //index the file here itself
       self.addToIndex(string(mess.ipaddr), string(mess.filename));
 
-      cout << "File indexed. " << endl;
-      exit(1);
+      cout << "File " << mess.filename << " indexed. " << endl;
 
       //send a reply
     }

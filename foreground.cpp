@@ -50,7 +50,7 @@ void handleShare(int &chordLength, Node &self, int &succSockFd, struct addrinfo*
   //check if the file needs to be added to this very node
   if((filehash > self.getPredecessor()->getSimpleId()) && (filehash <= self.getSimpleId())){
     //index the file here itself
-    self.addToIndex(self.getIp(), fileName);
+    self.addToIndex(fileName, self.getIp());
     cout << "Indexed" << endl;
     return;
   }
@@ -74,6 +74,33 @@ void handleShare(int &chordLength, Node &self, int &succSockFd, struct addrinfo*
   return;
 }
 
+/*
+ * Handle searching. Needs to take inputs
+ */
+void handleSearch(int &chordLength, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo){
+  string fileName;
+  cout << "Enter file name: "; 
+  cin >> fileName;
+
+  if(fileName.length() >= MAXFILENAME){
+    cout << "Filename too long. " << endl;
+    return;
+  }
+
+  //hash the string
+  identifier fh = hashfunc(fileName.c_str(), fileName.length());
+  //mod it to this chord network
+  int filehash = fh % chordLength;
+
+  cout << "Hashing file: " << fileName << " to " << filehash << endl;
+
+  //check if the file has been hashed in this very node
+  if((filehash > self.getPredecessor()->getSimpleId()) && (filehash <= self.getSimpleId())){
+    self.getFromIndex(fileName);
+  }
+
+
+}
 
 /*
  * Main user terminal
@@ -117,6 +144,7 @@ void manageNodeTerminal(int &chordLength, Node &self, int &succSockFd, struct ad
 		  break;
 		}		
 	case 3: {
+		  handleSearch(chordLength, self, succSockFd, succAddrInfo);
 		  return;
 		}		
 	default: cout << " Invalid option." << endl;

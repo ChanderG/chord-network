@@ -114,9 +114,9 @@ class Node{
   Node* getSuccessor();
 
   /*
-   * Add an <ip, filename> entry to this index
+   * Add an <filename, ip> entry to this index
    */
-  void addToIndex(std::string ip, std::string filename);
+  void addToIndex(std::string filename, std::string ip);
 };
 
 /* 
