@@ -81,6 +81,9 @@ void sendComm(int &sockfd, struct addrinfo* &p, Comm &msg);
 
 /*
  * Wrapper to recv a message via socket.
- * INPUT: the socket fd, the socket addrinfo and the message structure 
+ * INPUT: the socket fd and the message structure 
  */
-void recvComm(int &sockfd, struct addrinfo* &p, Comm &msg);
+void recvComm(int &sockfd, Comm &msg);
+
+//need an alternative command to send the reverse way
+//for this we need the addr returned in recvComm

@@ -119,14 +119,14 @@ int main(int argc, char* argv[]){
 
   initSockets(self, sockfd, succSockFd, succAddrInfo);
 
-  thread background(manageChord, chordLength, self, predSockFd, predAddrInfo, succSockFd, succAddrInfo);  
+  thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo);  
   thread foreground(manageNodeTerminal, chordLength, self, succSockFd, succAddrInfo);  
 
   foreground.join();
   cout << "Shutting down node terminal." << endl;
   background.join();
 
-  closeSockets(predSockFd, succSockFd);
+  closeSockets(sockfd, succSockFd);
 
   return 0;
 

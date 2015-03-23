@@ -31,10 +31,10 @@ using namespace std;
 /*
  * Handles all connections from behind. Namely all REQuests.
  */
-void handleConnectionsFromPred(int &chordLength, Node &self, int &predSockFd, struct addrinfo* &predAddrInfo, int &succSockFd, struct addrinfo* &succAddrInfo){
+void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo){
 
   Comm mess;
-  recvComm(predSockFd, predAddrInfo, mess);
+  recvComm(sockfd, mess);
 
   if(mess.type == REQ_SHARE){
     //check if the file needs to be added to this node
@@ -64,22 +64,22 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &predSockFd, st
 /*
  * Handles all connections from ahead. Namely all REPlys.
  */
-void handleConnectionsFromSucc(int &chordLength, Node &self, int &predSockFd, struct addrinfo* &predAddrInfo, int &succSockFd, struct addrinfo* &succAddrInfo){
+void handleConnectionsFromSucc(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo){
 }
 
 /*
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self, int &predSockFd, struct addrinfo* &predAddrInfo, int &succSockFd, struct addrinfo* &succAddrInfo){
+void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo){
   cout << "Chord maintainance work." << endl;
 
   //ready to select one of 2 sockets
   fd_set nset;
 
   int maxfd;
-  if(predSockFd > succSockFd){
-    maxfd = predSockFd;
+  if(sockfd > succSockFd){
+    maxfd = sockfd;
   }
   else{
     maxfd = succSockFd;
@@ -90,7 +90,7 @@ void manageChord(int &chordLength, Node &self, int &predSockFd, struct addrinfo*
   while(1){
     FD_ZERO(&nset);
 
-    FD_SET(predSockFd, &nset);
+    FD_SET(sockfd, &nset);
     FD_SET(succSockFd, &nset);
     result = select(maxfd+1, &nset, NULL, NULL, NULL);
     if(-1 == result){
@@ -98,13 +98,13 @@ void manageChord(int &chordLength, Node &self, int &predSockFd, struct addrinfo*
       exit(1);
     }
     else{
-      if(FD_ISSET(predSockFd, &nset)){
+      if(FD_ISSET(sockfd, &nset)){
 	cout << "Incomming connection from pred." << endl;
-	handleConnectionsFromPred(chordLength, self, predSockFd, predAddrInfo, succSockFd, succAddrInfo);
+	handleConnectionsFromPred(chordLength, self, sockfd, succSockFd, succAddrInfo);
       }
 
       if(FD_ISSET(succSockFd, &nset)){
-	handleConnectionsFromSucc(chordLength, self, predSockFd, predAddrInfo, succSockFd, succAddrInfo);
+	handleConnectionsFromSucc(chordLength, self, sockfd, succSockFd, succAddrInfo);
       }
     }
   }

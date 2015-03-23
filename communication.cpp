@@ -45,9 +45,9 @@ void sendComm(int &sockfd, struct addrinfo* &p, Comm &msg){
  * Wrapper to recv a message via socket.
  * INPUT: the socket fd, the socket addrinfo and the message structure 
  */
-void recvComm(int &sockfd, struct addrinfo* &p, Comm &msg){
+void recvComm(int &sockfd, Comm &msg){
 
-  if(-1 == recvfrom(sockfd, &msg, sizeof(msg), 0, p->ai_addr, &(p->ai_addrlen))){
+  if(-1 == recvfrom(sockfd, &msg, sizeof(msg), 0, NULL, NULL)){
     perror("recvfrom");  
     exit(1);
   }
