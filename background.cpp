@@ -37,10 +37,15 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &s
   recvComm(sockfd, mess);
 
   if(mess.type == REQ_SHARE){
+    //made a full loop => not available anywhere
+    if(mess.src == self.getSimpleId()){
+      cout << "Error in chord network." << endl;
+    }
+
     //check if the file needs to be added to this node
     if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
       //index the file here itself
-      self.addToIndex(string(mess.ipaddr), string(mess.filename));
+      self.addToIndex(string(mess.filename), string(mess.ipaddr));
 
       cout << "File " << mess.filename << " indexed. " << endl;
 
@@ -52,6 +57,20 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &s
     }
   }
   else if(mess.type == REQ_SEARCH){
+    //made a full loop => not available anywhere
+    if(mess.src == self.getSimpleId()){
+      cout << "File not in chord network." << endl;
+    }
+
+    //check if the file has been indexed in this node
+    if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
+      string ip = self.getFromIndex(string(mess.filename));
+      cout << "IP with required file " << mess.filename << " is " << ip << endl;
+    }
+    else{
+      //forward the message
+      sendComm(succSockFd, succAddrInfo, mess);
+    }
 
   }
   else{

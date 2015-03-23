@@ -117,6 +117,11 @@ class Node{
    * Add an <filename, ip> entry to this index
    */
   void addToIndex(std::string filename, std::string ip);
+
+  /*
+   * Retrieve ip from index
+   */
+  std::string getFromIndex(std::string filename); 
 };
 
 /* 

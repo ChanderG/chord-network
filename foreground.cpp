@@ -96,10 +96,23 @@ void handleSearch(int &chordLength, Node &self, int &succSockFd, struct addrinfo
 
   //check if the file has been hashed in this very node
   if((filehash > self.getPredecessor()->getSimpleId()) && (filehash <= self.getSimpleId())){
-    self.getFromIndex(fileName);
+    string ip = self.getFromIndex(fileName);
+
+    cout << "File is in IP: " << ip << endl;
   }
+  
+  //else pass it on to the successor
+  Comm mess;
+  mess.type = REQ_SEARCH;
+  mess.src = self.getSimpleId();
 
+  bzero(mess.filename, MAXFILENAME);
+  strcpy(mess.filename, fileName.c_str());
+  cout << mess.filename << endl;
 
+  mess.filehash = filehash;
+
+  sendComm(succSockFd, succAddrInfo, mess); 
 }
 
 /*
@@ -137,6 +150,7 @@ void manageNodeTerminal(int &chordLength, Node &self, int &succSockFd, struct ad
       scanf("%d", &choice);
       switch(choice){
 	case 1: {
+		  handleSearch(chordLength, self, succSockFd, succAddrInfo);
 		  break;
 		}		
 	case 2: {
@@ -144,7 +158,6 @@ void manageNodeTerminal(int &chordLength, Node &self, int &succSockFd, struct ad
 		  break;
 		}		
 	case 3: {
-		  handleSearch(chordLength, self, succSockFd, succAddrInfo);
 		  return;
 		}		
 	default: cout << " Invalid option." << endl;

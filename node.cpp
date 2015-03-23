@@ -126,6 +126,15 @@ void Node::addToIndex(std::string filename, std::string ip){
   index.insert(pair<string, string>(filename, ip));
 }
 
+/*
+ * Retrieve ip from index
+ */
+std::string Node::getFromIndex(std::string filename){
+  //needs better error checking
+  string ip = index[filename];
+  return ip;
+}
+
 
 /************************* OTHER FUNCTIONS ***************************/
 
