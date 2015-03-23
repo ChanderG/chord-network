@@ -63,10 +63,12 @@ void setupPredAndSucc(Node &self, list<Node> &nodes);
 
 /*
  * Init UDP sockets to both predecessor and successor.
- * INPUT: predSockFd, succSockFd     : respective socket descriptors
- * 	  predAddrInfo, succAddrInfo : resp socket address info 
+ * Bind a self socket for incoming predecessor communication and a 
+ * client like connection to successor
+ * INPUT: sockFd, succSockFd     : respective socket descriptors for self, succ
+ * 	  succAddrInfo           : succ socket address info 
  */	  
-void initSockets(Node &self,int &predSockFd, int &succSockFd, struct addrinfo* &predAddrInfo, struct addrinfo* &succAddrInfo);
+void initSockets(Node &self, int &sockFd, int &succSockFd,struct addrinfo* &succAddrInfo);
 
 /*
  * Close both sockets.

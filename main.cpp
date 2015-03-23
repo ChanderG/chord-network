@@ -113,12 +113,11 @@ int main(int argc, char* argv[]){
   cout << "Successor node: " << self.getSuccessor()->getSimpleId() << endl;
 
   //setup the sockets
-  int predSockFd;
-  struct addrinfo* predAddrInfo;
+  int sockfd;
   int succSockFd;
   struct addrinfo* succAddrInfo;
 
-  initSockets(self, predSockFd, succSockFd, predAddrInfo, succAddrInfo);
+  initSockets(self, sockfd, succSockFd, succAddrInfo);
 
   thread background(manageChord, chordLength, self, predSockFd, predAddrInfo, succSockFd, succAddrInfo);  
   thread foreground(manageNodeTerminal, chordLength, self, succSockFd, succAddrInfo);  
