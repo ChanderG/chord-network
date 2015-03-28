@@ -36,14 +36,20 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &s
   Comm mess;
   recvComm(sockfd, mess);
 
-  if(mess.type == REQ_SHARE){
-    //made a full loop => not available anywhere
-    if(mess.src == self.getSimpleId()){
+  //made a full loop => not available anywhere
+  if(mess.src == self.getSimpleId()){
+    if(mess.type == REQ_SHARE)
       cout << "Error in chord network." << endl;
-    }
+    else
+      cout << "File not in chord network." << endl;
+  }
 
-    //check if the file needs to be added to this node
-    if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
+  //check if the file needs to be added to this node
+  // or
+  //check if the file has been indexed in this node
+  if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
+
+    if(mess.type == REQ_SHARE){
       //index the file here itself
       self.addToIndex(string(mess.filename), string(mess.ipaddr));
 
@@ -51,38 +57,33 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &s
 
       //send a reply
     }
-    else{
-      //forward the message
-      sendComm(succSockFd, succAddrInfo, mess);
-    }
-  }
-  else if(mess.type == REQ_SEARCH){
-    //made a full loop => not available anywhere
-    if(mess.src == self.getSimpleId()){
-      cout << "File not in chord network." << endl;
-    }
+    else if(mess.type == REQ_SEARCH){
 
-    //check if the file has been indexed in this node
-    if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
       string ip = self.getFromIndex(string(mess.filename));
       cout << "IP with required file " << mess.filename << " is " << ip << endl;
+      //send a reply
     }
     else{
-      //forward the message
-      sendComm(succSockFd, succAddrInfo, mess);
+      //handle errors
     }
-
-  }
+  }  
   else{
-    //defn an error
-    //handle it
+    //not in this node
+    //forward the message
+    sendComm(succSockFd, succAddrInfo, mess);
   }
+
 }
 
 /*
  * Handles all connections from ahead. Namely all REPlys.
  */
 void handleConnectionsFromSucc(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo){
+
+  Comm mess;
+  recvComm(succSockFd, mess);
+
+  //here message type matters less
 }
 
 /*
