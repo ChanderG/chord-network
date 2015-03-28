@@ -116,10 +116,12 @@ int main(int argc, char* argv[]){
   int sockfd;
   int succSockFd;
   struct addrinfo* succAddrInfo;
+  int predSockFd;
+  struct addrinfo* predAddrInfo;
 
-  initSockets(self, sockfd, succSockFd, succAddrInfo);
+  initSockets(self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
 
-  thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo);  
+  thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
   thread foreground(manageNodeTerminal, chordLength, self, succSockFd, succAddrInfo);  
 
   foreground.join();

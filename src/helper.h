@@ -62,13 +62,15 @@ void readConfiguration(int &n, int &m, list<Node> &nodes);
 void setupPredAndSucc(Node &self, list<Node> &nodes); 
 
 /*
- * Init UDP sockets to both predecessor and successor.
- * Bind a self socket for incoming predecessor communication and a 
- * client like connection to successor
- * INPUT: sockFd, succSockFd     : respective socket descriptors for self, succ
- * 	  succAddrInfo           : succ socket address info 
+ * Init UDP sockets for itself and as clients to both predecessor and successor.
+ * Bind a self socket for all incoming connections.
+ * Also open 2 sockets (one on each side) for sending messages.
+ * INPUT: sockFd                  : for listening for incoming connections    
+ *        succSockFd, predSockFd  : respective socket descriptors for succ, pred
+ * 	  succAddrInfo            : succ socket address info 
+ * 	  predAddrInfo            : pred socket address info 
  */	  
-void initSockets(Node &self, int &sockFd, int &succSockFd,struct addrinfo* &succAddrInfo);
+void initSockets(Node &self, int &sockfd, int &succSockFd,struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo);
 
 /*
  * Close both sockets.

@@ -174,13 +174,15 @@ void setupPredAndSucc(Node &self, list<Node> &nodes){
 }
 
 /*
- * Init UDP sockets to both predecessor and successor.
- * Bind a self socket for incoming predecessor communication and a 
- * client like connection to successor
- * INPUT: sockFd, succSockFd     : respective socket descriptors for self, succ
- * 	  succAddrInfo           : succ socket address info 
+ * Init UDP sockets for itself and as clients to both predecessor and successor.
+ * Bind a self socket for all incoming connections.
+ * Also open 2 sockets (one on each side) for sending messages.
+ * INPUT: sockFd                  : for listening for incoming connections    
+ *        succSockFd, predSockFd  : respective socket descriptors for succ, pred
+ * 	  succAddrInfo            : succ socket address info 
+ * 	  predAddrInfo            : pred socket address info 
  */	  
-void initSockets(Node &self, int &sockfd, int &succSockFd,struct addrinfo* &succAddrInfo){
+void initSockets(Node &self, int &sockfd, int &succSockFd,struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo){
 
   cout << "Initializing sockets." << endl;
 
@@ -225,9 +227,33 @@ void initSockets(Node &self, int &sockfd, int &succSockFd,struct addrinfo* &succ
     cout << "Failed to create socket to succecessor. Check if the node is up" << endl;
     exit(1);
   }
+  freeaddrinfo(servinfo);
+
+  //for getting pred addr info -> for message passing
+  bzero(&hints, sizeof(hints));
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_DGRAM;
+
+  if(0 != getaddrinfo((self.getPredecessor()->getIp()).c_str(), to_string(self.getPredecessor()->getPort()).c_str(), &hints, &servinfo)){
+    perror("getaddrinfo");
+    exit(1);
+  }
+
+  for(predAddrInfo = servinfo; predAddrInfo!= NULL; predAddrInfo = predAddrInfo->ai_next){
+    if(-1 == (predSockFd = socket(predAddrInfo->ai_family, predAddrInfo->ai_socktype, predAddrInfo->ai_protocol))){
+      perror("socket");
+      continue;
+    }
+    break;
+  }
+
+  if(predAddrInfo == NULL){
+    cout << "Failed to get address of predecessor. Check if the node is up" << endl;
+    exit(1);
+  }
 
   freeaddrinfo(servinfo);
-  //sockets on both sides up and running
+  //all 3 sockets ready
 }
 
 /*
@@ -239,4 +265,3 @@ void closeSockets(int &predSockFd, int &succSockFd){
   close(succSockFd);
   cout << "All sockets closed." << endl;
 }
-

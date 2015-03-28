@@ -25,143 +25,140 @@
 #include "communication.h"
 
 #include <iostream>
+#include <cstring>
 #include <sys/select.h>
 using namespace std;
 
-/*
- * Handles all connections from behind. Namely all REQuests.
+/* Handle an incomming share request 
  */
-void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo){
-
-  Comm mess, messrep;
-  bzero(messrep.ipaddr,MAXIPLEN); 
-  bzero(messrep.comment,256); 
-  recvComm(sockfd, mess);
-
+void handleReqShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo ){
+  Comm messrep;
   //made a full loop => not available anywhere
   if(mess.src == self.getSimpleId()){
-    if(mess.type == REQ_SHARE){
-      cout << "Error in chord network." << endl;
-      //pass the message back
-      messrep.comm_type = REP_SHARE;
-      strcpy(messrep.ipaddr, "Error. File not indexed." );
-      //sendComm()
-    }
-    else if(mess.type == REQ_SEARCH){
-      cout << "File not in chord network." << endl;
-      //pass the message back
-      messrep.comm_type = REP_SEARCH;
-      strcpy(messrep.ipaddr, "NOT FOUND" );
-      //sendComm()
-    }
-    else{
-      //handle errors
-    }
-  }
+    cout << "Error in chord network." << endl;
+    //pass the message back
+    bzero(messrep.ipaddr,MAXIPLEN); 
 
-  //check if the file needs to be added to this node
-  // or
-  //check if the file has been indexed in this node
-  if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
-
-    if(mess.type == REQ_SHARE){
-      //index the file here itself
-      self.addToIndex(string(mess.filename), string(mess.ipaddr));
-      cout << "File " << mess.filename << " indexed. " << endl;
-      //send a reply
-      messrep.comm_type = REP_SHARE;
-      strcpy(messrep.ipaddr, "File successfully indexed." );
-      //sendComm()
-    }
-    else if(mess.type == REQ_SEARCH){
-
-      string ip = self.getFromIndex(string(mess.filename));
-      cout << "IP with required file " << mess.filename << " is " << ip << endl;
-      //send a reply
-
-      messrep.comm_type = REP_SEARCH;
-      strcpy(messrep.ipaddr, ip.c_str());
-      //sendComm()
-    }
-    else{
-      //handle errors
-    }
+    messrep.type = REP_SHARE;
+    messrep.src = mess.src;
+    strcpy(messrep.ipaddr, "Error. File not indexed." );
+    sendComm(predSockFd, predAddrInfo, messrep);
   }  
+  //check if the file has been indexed in this node
+  else if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
+    self.addToIndex(string(mess.filename), string(mess.ipaddr));
+    cout << "File " << mess.filename << " indexed. " << endl;
+    //send a reply
+    bzero(messrep.comment,256); 
+
+    messrep.type = REP_SHARE;
+    messrep.src = mess.src;
+    strcpy(messrep.comment, "File successfully indexed." );
+    sendComm(predSockFd, predAddrInfo, messrep);
+  }
   else{
     //not in this node
     //forward the message
     sendComm(succSockFd, succAddrInfo, mess);
   }
-
 }
 
-/*
- * Handles all connections from ahead. Namely all REPlys.
+
+/* Handle an incomming search request 
  */
-void handleConnectionsFromSucc(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo){
+void handleReqSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo ){
+  //made a full loop => not available anywhere
+  Comm messrep;
+  if(mess.src == self.getSimpleId()){
+    cout << "File not in chord network." << endl;
+    //pass the message back
+    bzero(messrep.ipaddr,MAXIPLEN); 
 
-  Comm mess;
-  recvComm(succSockFd, mess);
+    messrep.type = REP_SEARCH;
+    messrep.src = mess.src;
+    strcpy(messrep.ipaddr, "NOT FOUND" );
+    sendComm(predSockFd, predAddrInfo, messrep);
+  }  
+  //check if the file needs to be added to this node
+  else if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
+    string ip = self.getFromIndex(string(mess.filename));
+    cout << "IP with required file " << mess.filename << " is " << ip << endl;
+    //send a reply
+    bzero(messrep.ipaddr,MAXIPLEN); 
 
+    messrep.type = REP_SEARCH;
+    messrep.src = mess.src;
+    strcpy(messrep.ipaddr, ip.c_str());
+    sendComm(predSockFd, predAddrInfo, messrep);
+  }
+  else{
+    //not in this node
+    //forward the message
+    sendComm(succSockFd, succAddrInfo, mess);
+  }
+}
+
+
+/* Handle an incomming share reply 
+ */
+void handleRepShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo ){
   // this message is meant for us
   if(mess.src == self.getSimpleId()){
-    if(mess.comm_type == REP_SHARE){
-      cout << mess.comment << endl;
-    }
-    else if(mess.comm_type == REP_SEARCH){
-      cout << "File found in : " << mess.ipaddr << endl;
-    }
-    else{
-      //handle errors
-    }
-  }
+    cout << mess.comment << endl;
+  }  
   else{
     //simply pass it along
     //the pred addr
-    //sendComm();
+    sendComm(predSockFd, predAddrInfo, mess);
   }
-
 }
+
+
+/* Handle an incomming search reply 
+ */
+void handleRepSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo ){
+  // this message is meant for us
+  if(mess.src == self.getSimpleId()){
+    cout << "File found in : " << mess.ipaddr << endl;
+  }  
+  else{
+    //simply pass it along
+    //the pred addr
+    sendComm(predSockFd, predAddrInfo, mess);
+  }
+}
+
 
 /*
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo){
+void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo){
   cout << "Chord maintainance work." << endl;
 
-  //ready to select one of 2 sockets
-  fd_set nset;
-
-  int maxfd;
-  if(sockfd > succSockFd){
-    maxfd = sockfd;
-  }
-  else{
-    maxfd = succSockFd;
-  }
-  
-  int result;
-
+  Comm mess;
   while(1){
-    FD_ZERO(&nset);
-
-    FD_SET(sockfd, &nset);
-    FD_SET(succSockFd, &nset);
-    result = select(maxfd+1, &nset, NULL, NULL, NULL);
-    if(-1 == result){
-      cout << "Error in select. " << endl;
-      exit(1);
-    }
-    else{
-      if(FD_ISSET(sockfd, &nset)){
-	cout << "Incomming connection from pred." << endl;
-	handleConnectionsFromPred(chordLength, self, sockfd, succSockFd, succAddrInfo);
-      }
-
-      if(FD_ISSET(succSockFd, &nset)){
-	handleConnectionsFromSucc(chordLength, self, sockfd, succSockFd, succAddrInfo);
-      }
+    recvComm(sockfd, mess);
+    
+    switch(mess.type){
+      case REQ_SHARE: {
+			handleReqShare(mess, self,succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			break;
+		      }
+      case REQ_SEARCH: {
+			handleReqSearch(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			break;
+		      }
+      case REP_SHARE: {
+			handleRepShare(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			break;
+		      }
+      case REP_SEARCH: {
+			handleRepSearch(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			break;
+		      }
+      default: break;		      
     }
   }
+
 }
