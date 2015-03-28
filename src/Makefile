@@ -3,7 +3,7 @@ HEADERS = node.h hash.h helper.h foreground.h background.h communication.h
 CPPFLAGS = -std=c++0x -Wall -Wextra -lpthread
 
 main: $(HEADERS) $(SRCFILES)
-	g++ $(SRCFILES) -o main $(CPPFLAGS)
+	g++ $(SRCFILES) -o ../main $(CPPFLAGS)
 
 clean: 
 	rm main
