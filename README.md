@@ -1,18 +1,18 @@
 #Chord
 
-###Organization
-There are programs:
-* Chord server/client : which does the distributed indexing and searching
-* p2p\_server : a server running waiting for incoming TCP requests to transfer files
-* p2p\_client : a client to connect to a specific peer to download files
+## Part 1: Simple Chord network
 
-They could be modules in a single program too. There are 4 main functionality.
+Systems can connect only to neighbours on either side.
+
+###Organization
+There are 4 main functionalities.
 
 * Share a file - which means hash it and send the index to the correct machine
 * Search a file - which means search the above distributed index
 * Offer the file for download
 * Download a file from a machine
 
+The later 2 are TCP based and quite trivial. The main code here is the chord network itself.
 
 ###The chord network connections
 
@@ -20,3 +20,13 @@ This was the key behind the entire network. How many sockets and what does each 
 
 My understanding now is as follows:
 A node (every node) creates a sockfd to which it binds. It then creates a succSockFd and a predSockFd to act as clients to the successor and predecessor nodes. So it sends messages via the latter sockets and uses it's own socket only to recieve messages.
+
+Though a node could theoretically reply via it's bound socket, that is not being done here for simplicity.
+
+
+### Simulation
+
+The perl script simulator.pl spins up the same program on different terminal simultaneously by using a different port on each instance all controllable from the conf/config.chord file. Each IP:Port in the file is considered a different virtual machine. Use with a tiling window manager for best effects. 
+
+## Part 2: Finger tables and dynamic nodes 
+WIP.
