@@ -33,15 +33,30 @@ using namespace std;
  */
 void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo){
 
-  Comm mess;
+  Comm mess, messrep;
+  bzero(messrep.ipaddr,MAXIPLEN); 
+  bzero(messrep.comment,256); 
   recvComm(sockfd, mess);
 
   //made a full loop => not available anywhere
   if(mess.src == self.getSimpleId()){
-    if(mess.type == REQ_SHARE)
+    if(mess.type == REQ_SHARE){
       cout << "Error in chord network." << endl;
-    else
+      //pass the message back
+      messrep.comm_type = REP_SHARE;
+      strcpy(messrep.ipaddr, "Error. File not indexed." );
+      //sendComm()
+    }
+    else if(mess.type == REQ_SEARCH){
       cout << "File not in chord network." << endl;
+      //pass the message back
+      messrep.comm_type = REP_SEARCH;
+      strcpy(messrep.ipaddr, "NOT FOUND" );
+      //sendComm()
+    }
+    else{
+      //handle errors
+    }
   }
 
   //check if the file needs to be added to this node
@@ -52,16 +67,21 @@ void handleConnectionsFromPred(int &chordLength, Node &self, int &sockfd, int &s
     if(mess.type == REQ_SHARE){
       //index the file here itself
       self.addToIndex(string(mess.filename), string(mess.ipaddr));
-
       cout << "File " << mess.filename << " indexed. " << endl;
-
       //send a reply
+      messrep.comm_type = REP_SHARE;
+      strcpy(messrep.ipaddr, "File successfully indexed." );
+      //sendComm()
     }
     else if(mess.type == REQ_SEARCH){
 
       string ip = self.getFromIndex(string(mess.filename));
       cout << "IP with required file " << mess.filename << " is " << ip << endl;
       //send a reply
+
+      messrep.comm_type = REP_SEARCH;
+      strcpy(messrep.ipaddr, ip.c_str());
+      //sendComm()
     }
     else{
       //handle errors
@@ -83,7 +103,24 @@ void handleConnectionsFromSucc(int &chordLength, Node &self, int &sockfd, int &s
   Comm mess;
   recvComm(succSockFd, mess);
 
-  //here message type matters less
+  // this message is meant for us
+  if(mess.src == self.getSimpleId()){
+    if(mess.comm_type == REP_SHARE){
+      cout << mess.comment << endl;
+    }
+    else if(mess.comm_type == REP_SEARCH){
+      cout << "File found in : " << mess.ipaddr << endl;
+    }
+    else{
+      //handle errors
+    }
+  }
+  else{
+    //simply pass it along
+    //the pred addr
+    //sendComm();
+  }
+
 }
 
 /*
