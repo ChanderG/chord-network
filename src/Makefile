@@ -6,4 +6,4 @@ main: $(HEADERS) $(SRCFILES)
 	g++ $(SRCFILES) -o ../main $(CPPFLAGS)
 
 clean: 
-	rm main
+	rm ../main

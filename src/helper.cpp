@@ -144,23 +144,13 @@ void readConfiguration(int &n, int &m, vector<Node> &nodes){
  */ 	
 void setupPredAndSucc(Node &self, vector<Node> &nodes){
   bool presence = false;   //to see if self has an entry in the config file
- 
+
   //setup predecessor and successor nodes
-  for(vector<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
-    if(it->getSimpleId() == self.getSimpleId()){
+  for (unsigned int i = 0; i < nodes.size(); i++) {
+    if(nodes[i].getSimpleId() == self.getSimpleId()){
       presence = true;
-      if(it == nodes.begin()){
-	self.setPredecessor(&*prev(end(nodes)));
-	self.setSuccessor(&*next(it));
-      }
-      else if(it == prev(nodes.end())){
-	self.setPredecessor(&*prev(it));
-	self.setSuccessor(&*begin(nodes));
-      }
-      else{
-	self.setPredecessor(&*prev(it));
-	self.setSuccessor(&*next(it));
-      }
+      self.setPredecessor(&nodes[(nodes.size()-1 + i)%nodes.size()]);
+      self.setSuccessor(&nodes[(i+1)%nodes.size()]);
       break;
     }
   }
