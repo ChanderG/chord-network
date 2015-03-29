@@ -28,7 +28,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <list>
+#include <vector>
 #include <cstdlib>
 #include <cstring>
 
@@ -63,7 +63,7 @@ identifier hashNode(string ip, int port){
  * 	nodes : the list of nodes extracted from the file 
  * ACTION: parses out the info and stores them in these variables 	
  */
-void readConfiguration(int &n, int &m, list<Node> &nodes){
+void readConfiguration(int &n, int &m, vector<Node> &nodes){
   //try to read config file
   ifstream configfile;
   configfile.open("conf/config.chord", ios::in);
@@ -142,11 +142,11 @@ void readConfiguration(int &n, int &m, list<Node> &nodes){
  * 	self  : reference to main node
  * 	nodes : list of nodes in SORTED order
  */ 	
-void setupPredAndSucc(Node &self, list<Node> &nodes){
+void setupPredAndSucc(Node &self, vector<Node> &nodes){
   bool presence = false;   //to see if self has an entry in the config file
  
   //setup predecessor and successor nodes
-  for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
+  for(vector<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
     if(it->getSimpleId() == self.getSimpleId()){
       presence = true;
       if(it == nodes.begin()){

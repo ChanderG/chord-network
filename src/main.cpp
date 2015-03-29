@@ -30,7 +30,8 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <list>
+#include <vector>
+#include <algorithm>
 #include <cmath>
 #include <thread>
 
@@ -80,25 +81,26 @@ int main(int argc, char* argv[]){
 
   int n;  // the chord size 
   int m;  // the number of nodes in the network 
-  list<Node> nodes;  //the m nodes 
+  vector<Node> nodes;  //the m nodes 
 
   readConfiguration(n, m, nodes);
   int chordLength = pow(2, n);
 
   self.setSimpleId(chordLength);
   cout << "Looping the nodes around the chord." << endl;
-  for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
+  for(vector<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
     it->setSimpleId(chordLength); 
   }
 
-  nodes.sort(compare_simpleId);   //sort according to simpleId
+  sort(nodes.begin(), nodes.end());   //sort according to simpleId
 
-  for(list<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
+  for(vector<Node>::iterator it = nodes.begin(); it != nodes.end();it++){
     cout << it->getAddress() <<  " " << it->getID() << " " << it->getSimpleId() << endl;
   }
 
   int org = nodes.size();
-  nodes.unique(equal_simpleId);   //reduce to unique elements; according to simpleId
+  //reduce to unique elements; according to simpleId
+  unique(nodes.begin(), nodes.end());   
   int fin = nodes.size();
   //if duplicates in simpleId exist, the chordLength or the hash func is not good enough
   if(org != fin){

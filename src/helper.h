@@ -25,7 +25,7 @@
 #include "node.h"
 
 #include <string>
-#include <list>
+#include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h> 
@@ -50,7 +50,7 @@ identifier hashNode(string ip, int port);
  * 	nodes : the list of nodes extracted from the file 
  * ACTION: parses out the info and stores them in these variables 	
  */
-void readConfiguration(int &n, int &m, list<Node> &nodes);
+void readConfiguration(int &n, int &m, vector<Node> &nodes);
 
 /*
  * Setup the predecessor and successor links
@@ -59,7 +59,7 @@ void readConfiguration(int &n, int &m, list<Node> &nodes);
  * 	self  : reference to main node
  * 	nodes : list of nodes in SORTED order
  */ 	
-void setupPredAndSucc(Node &self, list<Node> &nodes); 
+void setupPredAndSucc(Node &self, vector<Node> &nodes); 
 
 /*
  * Init UDP sockets for itself and as clients to both predecessor and successor.

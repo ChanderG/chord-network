@@ -91,7 +91,7 @@ class Node{
   /*
    * Simple getval function
    */
-  int getSimpleId();
+  int getSimpleId() const;
 
   /*
    * set predecessor
@@ -122,16 +122,16 @@ class Node{
    * Retrieve ip from index
    */
   std::string getFromIndex(std::string filename); 
+
+  /*
+   * Overloading < operator for use in sorting
+   */
+  friend bool operator<(const Node& first, const Node& second);
+
+  /*
+   * Overloading = operator for use in removing duplicates
+   */
+  friend bool operator==(const Node& first, const Node& second);
 };
-
-/* 
- * Compare function for 2 nodes based on simpleId
- */
-bool compare_simpleId(Node& first, Node& second);
-
-/* 
- * Equality function for 2 nodes based on simpleId. For uniqueness testing.
- */
-bool equal_simpleId(Node &first, Node &second);
 
 #endif

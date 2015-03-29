@@ -73,7 +73,7 @@ void Node::setSimpleId(int chordLength){
 /*
  * Simple getval function
  */
-int Node::getSimpleId(){
+int Node::getSimpleId() const{
   return simpleId;
 }
 
@@ -135,19 +135,16 @@ std::string Node::getFromIndex(std::string filename){
   return ip;
 }
 
-
-/************************* OTHER FUNCTIONS ***************************/
-
-/* 
- * Compare function for 2 nodes based on simpleId. For sorting.
+/*
+ * Overloading < operator for use in sorting
  */
-bool compare_simpleId(Node &first, Node &second){
+bool operator<(const Node& first, const Node& second){
   return (first.getSimpleId() < second.getSimpleId());
 }
 
-/* 
- * Equality function for 2 nodes based on simpleId. For uniqueness testing.
+/*
+ * Overloading = operator for use in removing duplicates
  */
-bool equal_simpleId(Node &first, Node &second){
+bool operator==(const Node& first, const Node& second){
   return (first.getSimpleId() == second.getSimpleId());
 }
