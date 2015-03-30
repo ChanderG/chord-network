@@ -30,3 +30,16 @@ The perl script simulator.pl spins up the same program on different terminal sim
 
 ## Part 2: Finger tables and dynamic nodes 
 WIP.
+
+
+###CHANGELOG
+
+*v1.3*
+Adds changelog.
+
+*v1.2*
+Updates list to vector internally.
+No breaking funcionality changes.
+
+*v1.0*
+First working version of simple chord network.
