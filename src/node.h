@@ -28,6 +28,7 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
 /*
  * Simple type for identifier
@@ -47,6 +48,7 @@ class Node{
   Node *successor;
 
   std::map<std::string,std::string> index;
+  std::map<int, Node> fingertable;
 
   public:
   /*
@@ -132,6 +134,11 @@ class Node{
    * Overloading = operator for use in removing duplicates
    */
   friend bool operator==(const Node& first, const Node& second);
+
+  /*
+   * Setup finger table given set of all nodes.
+   */
+  void setupFingerTable(std::vector<Node> nodes, int chordSize, int chordLength);
 };
 
 #endif

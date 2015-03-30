@@ -25,6 +25,8 @@
 #include "node.h"
 
 #include <string>
+#include <cmath>
+#include <iostream>
 
 using namespace std;
 
@@ -147,4 +149,44 @@ bool operator<(const Node& first, const Node& second){
  */
 bool operator==(const Node& first, const Node& second){
   return (first.getSimpleId() == second.getSimpleId());
+}
+
+/*
+ * Setup finger table given set of all nodes.
+ */
+void Node::setupFingerTable(vector<Node> nodes, int chordSize, int chordLength){
+  int offset = -1;
+  for(unsigned int i = 0; i < nodes.size(); i++){
+    if(nodes[i].getSimpleId() == simpleId){
+      offset = i;
+      break;
+    }
+  }
+
+  if(offset == -1){
+    //cannot happen
+    cout << "Unable to setup Finger Table." << endl;
+    exit(1);
+  }
+  
+  int in = 0;
+  int left;
+  Node *right;
+  for (in = 0; in < chordSize; in++) {
+    left = (offset + int(pow(2, in)))%chordLength;
+    right = &nodes[0];
+    //find the corresponding node
+    for(unsigned int i = 0; i < nodes.size(); i++){
+      if(nodes[i].getSimpleId() > left){
+	right = &nodes[i];
+	break;
+      }
+    }
+    fingertable.insert(pair<int, Node>(left, *right));
+  }
+
+  cout << "The completed finger table is: " << endl;
+  for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
+    cout << it->first << " -> " << it->second.getSimpleId() << endl;
+  }
 }

@@ -109,6 +109,8 @@ int main(int argc, char* argv[]){
     exit(0);
   }
 
+  self.setupFingerTable(nodes, n, chordLength);
+
   setupPredAndSucc(self, nodes);
 
   cout << "Predecessor node: " << self.getPredecessor()->getSimpleId() << endl;
