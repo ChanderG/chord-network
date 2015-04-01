@@ -157,6 +157,12 @@ class Node{
    * Open sockets for all nodes in fingertable
    */ 
   void setupNodesockets();
+
+  /*
+   * Close all sockets. One server and all clients.
+   * INPUT: server socket
+   */
+  void closeSockets(int &sockfd);
 };
 
 

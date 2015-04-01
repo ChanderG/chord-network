@@ -207,3 +207,16 @@ void Node::setupNodesockets(){
     nodesockets.insert(pair<Node, NodeClientSocket>(it->second, ncs));
   }
 }
+
+/*
+ * Close all sockets. One server and all clients.
+ * INPUT: server socket
+ */
+void Node::closeSockets(int &sockfd){
+  //close the main server socket
+  close(sockfd);
+  //now all the ones with an entry in the nodesockets table
+  for(map<Node, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
+    close(it->second.sockfd);
+  }
+}
