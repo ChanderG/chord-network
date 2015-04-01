@@ -164,71 +164,6 @@ void setupPredAndSucc(Node &self, vector<Node> &nodes){
 }
 
 /*
- * Init UDP sockets for itself and as clients to both predecessor and successor.
- * Also open 2 sockets (one on each side) for sending messages.
- * Open all client sockets by looking up finger table
- * INPUT: succSockFd, predSockFd  : respective socket descriptors for succ, pred
- * 	  succAddrInfo            : succ socket address info 
- * 	  predAddrInfo            : pred socket address info 
- */	  
-void initSockets(Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo){
-
-  cout << "Initializing sockets." << endl;
-
-  //for successor
-  struct addrinfo hints, *servinfo;
-
-  bzero(&hints, sizeof(hints));
-  hints.ai_family = AF_INET;
-  hints.ai_socktype = SOCK_DGRAM;
-  
-  if(0 != getaddrinfo((self.getSuccessor()->getIp()).c_str(), to_string(self.getSuccessor()->getPort()).c_str(), &hints, &servinfo)){
-    perror("getaddrinfo");
-    exit(1);
-  }
-
-  for(succAddrInfo = servinfo; succAddrInfo!= NULL; succAddrInfo = succAddrInfo->ai_next){
-    if(-1 == (succSockFd = socket(succAddrInfo->ai_family, succAddrInfo->ai_socktype, succAddrInfo->ai_protocol))){
-      perror("socket");
-      continue;
-    }
-    break;
-  }
-
-  if(succAddrInfo == NULL){
-    cout << "Failed to create socket to succecessor. Check if the node is up" << endl;
-    exit(1);
-  }
-  freeaddrinfo(servinfo);
-
-  //for getting pred addr info -> for message passing
-  bzero(&hints, sizeof(hints));
-  hints.ai_family = AF_INET;
-  hints.ai_socktype = SOCK_DGRAM;
-
-  if(0 != getaddrinfo((self.getPredecessor()->getIp()).c_str(), to_string(self.getPredecessor()->getPort()).c_str(), &hints, &servinfo)){
-    perror("getaddrinfo");
-    exit(1);
-  }
-
-  for(predAddrInfo = servinfo; predAddrInfo!= NULL; predAddrInfo = predAddrInfo->ai_next){
-    if(-1 == (predSockFd = socket(predAddrInfo->ai_family, predAddrInfo->ai_socktype, predAddrInfo->ai_protocol))){
-      perror("socket");
-      continue;
-    }
-    break;
-  }
-
-  if(predAddrInfo == NULL){
-    cout << "Failed to get address of predecessor. Check if the node is up" << endl;
-    exit(1);
-  }
-
-  freeaddrinfo(servinfo);
-  //all 3 sockets ready
-}
-
-/*
  * Bind a UDP self socket for all incoming connections.
  * INPUT: sockFd : for listening for incoming connections    
  */
@@ -250,6 +185,42 @@ void initSocketSelfServer(Node &self, int &sockfd){
     perror("bind");
     exit(1);
   }
+}
+
+/*
+ * Create a client socket to a destination Node.
+ * To be used for sending messages to say succ, pred
+ * INPUT: destNode :  the destination node
+ *        sockFd   :  the socket where we will send messages    		
+ *        addrInfo :  standard addrinfo structure for the same
+ */
+void initSocketClientToNode(Node &destNode, int &sockFd, struct addrinfo* &addrInfo){
+
+  //for input destination node
+  struct addrinfo hints, *servinfo;
+
+  bzero(&hints, sizeof(hints));
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_DGRAM;
+  
+  if(0 != getaddrinfo((destNode.getIp()).c_str(), to_string(destNode.getPort()).c_str(), &hints, &servinfo)){
+    perror("getaddrinfo");
+    exit(1);
+  }
+
+  for(addrInfo = servinfo; addrInfo!= NULL; addrInfo = addrInfo->ai_next){
+    if(-1 == (sockFd = socket(addrInfo->ai_family, addrInfo->ai_socktype, addrInfo->ai_protocol))){
+      perror("socket");
+      continue;
+    }
+    break;
+  }
+
+  if(addrInfo == NULL){
+    cout << "Failed to create socket to succecessor. Check if the node is up" << endl;
+    exit(1);
+  }
+  freeaddrinfo(servinfo);
 }
 
 /*
