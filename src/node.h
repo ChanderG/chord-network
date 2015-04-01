@@ -35,6 +35,17 @@
  */
 typedef unsigned long long identifier;
 
+/*
+ * Structure to hold socket info of all nodes easily.
+ * sockfd   : socket descriptor of client to send messages to that node
+ * addrInfo : the corr addr for above
+ * Needs to be associated with a node.
+ */ 
+struct NodeClientSocket {
+  int sockfd;
+  struct addrinfo* addrInfo;
+};
+
 /* Main Node class  
  * Lightweight. Need to normalize the values outside
  */
@@ -49,6 +60,7 @@ class Node{
 
   std::map<std::string,std::string> index;
   std::map<int, Node> fingertable;
+  std::map<Node, NodeClientSocket> nodesockets;
 
   public:
   /*
@@ -139,6 +151,13 @@ class Node{
    * Setup finger table given set of all nodes.
    */
   void setupFingerTable(std::vector<Node> nodes, int chordSize, int chordLength);
+
+  /*
+   * Setup the map of nodes to socketinfo
+   * Open sockets for all nodes in fingertable
+   */ 
+  void setupNodesockets();
 };
+
 
 #endif

@@ -23,6 +23,7 @@
 /* Member definitions of Node class. Other node related functions
  */
 #include "node.h"
+#include "helper.h"
 
 #include <string>
 #include <cmath>
@@ -188,5 +189,21 @@ void Node::setupFingerTable(vector<Node> nodes, int chordSize, int chordLength){
   cout << "The completed finger table is: " << endl;
   for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
     cout << it->first << " -> " << it->second.getSimpleId() << endl;
+  }
+
+  //opening sockets to all clients
+  setupNodesockets();
+}
+
+/*
+ * Setup the map of nodes to socketinfo. 
+ * Open sockets for all nodes in fingertable
+ */ 
+void Node::setupNodesockets(){
+  for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
+    //node in question -> it->second  
+    NodeClientSocket ncs;
+    initSocketClientToNode(it->second, ncs.sockfd, ncs.addrInfo);
+    nodesockets.insert(pair<Node, NodeClientSocket>(it->second, ncs));
   }
 }
