@@ -123,7 +123,8 @@ int main(int argc, char* argv[]){
   int predSockFd;
   struct addrinfo* predAddrInfo;
 
-  initSockets(self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+  initSockets(self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+  initSocketSelfServer(self, sockfd);
 
   thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
   thread foreground(manageNodeTerminal, chordLength, self, succSockFd, succAddrInfo);  

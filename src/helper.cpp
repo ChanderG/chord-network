@@ -165,33 +165,15 @@ void setupPredAndSucc(Node &self, vector<Node> &nodes){
 
 /*
  * Init UDP sockets for itself and as clients to both predecessor and successor.
- * Bind a self socket for all incoming connections.
  * Also open 2 sockets (one on each side) for sending messages.
- * INPUT: sockFd                  : for listening for incoming connections    
- *        succSockFd, predSockFd  : respective socket descriptors for succ, pred
+ * Open all client sockets by looking up finger table
+ * INPUT: succSockFd, predSockFd  : respective socket descriptors for succ, pred
  * 	  succAddrInfo            : succ socket address info 
  * 	  predAddrInfo            : pred socket address info 
  */	  
-void initSockets(Node &self, int &sockfd, int &succSockFd,struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo){
+void initSockets(Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo){
 
   cout << "Initializing sockets." << endl;
-
-  //for self (server-like for pred)
-  struct sockaddr_in sa;
-
-  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-  if(-1 == sockfd){
-    perror("socket");
-    exit(1);
-  }
-
-  sa.sin_family = AF_INET;
-  sa.sin_port = htons(self.getPort());
-  sa.sin_addr.s_addr = INADDR_ANY;   //(self.getIp()).c_str();  
-  if(-1 == bind(sockfd, (struct sockaddr *)&sa, sizeof(sa))){
-    perror("bind");
-    exit(1);
-  }
 
   //for successor
   struct addrinfo hints, *servinfo;
@@ -244,6 +226,30 @@ void initSockets(Node &self, int &sockfd, int &succSockFd,struct addrinfo* &succ
 
   freeaddrinfo(servinfo);
   //all 3 sockets ready
+}
+
+/*
+ * Bind a UDP self socket for all incoming connections.
+ * INPUT: sockFd : for listening for incoming connections    
+ */
+void initSocketSelfServer(Node &self, int &sockfd){
+
+  //for self (server-like for everyone)
+  struct sockaddr_in sa;
+
+  sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+  if(-1 == sockfd){
+    perror("socket");
+    exit(1);
+  }
+
+  sa.sin_family = AF_INET;
+  sa.sin_port = htons(self.getPort());
+  sa.sin_addr.s_addr = INADDR_ANY;   //(self.getIp()).c_str();  
+  if(-1 == bind(sockfd, (struct sockaddr *)&sa, sizeof(sa))){
+    perror("bind");
+    exit(1);
+  }
 }
 
 /*
