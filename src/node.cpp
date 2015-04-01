@@ -220,3 +220,21 @@ void Node::closeSockets(int &sockfd){
     close(it->second.sockfd);
   }
 }
+
+/*
+ * Return the client socket info for the node responsible for the input filehash.
+ * Get the greatest entry in the fingertable smaller than the query.
+ */ 
+NodeClientSocket Node::getNodeSocketFor(int filehash){
+  for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
+    if(it->first > filehash) {
+      //the prev element is the one
+      return nodesockets[prev(it)->second];
+      //break;
+    }
+  }
+  NodeClientSocket ncs;
+  ncs.sockfd = -1;
+  ncs.addrInfo = NULL;
+  return (ncs);
+}

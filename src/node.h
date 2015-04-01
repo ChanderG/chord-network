@@ -163,6 +163,12 @@ class Node{
    * INPUT: server socket
    */
   void closeSockets(int &sockfd);
+
+  /*
+   * Return the client socket info for the node responsible for the input filehash.
+   * Get the greatest entry in the fingertable smaller than the query.
+   */ 
+  NodeClientSocket getNodeSocketFor(int filehash);
 };
 
 
