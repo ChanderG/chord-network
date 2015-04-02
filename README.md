@@ -34,6 +34,9 @@ WIP.
 
 ###CHANGELOG
 
+*v1.6*
+Complete chord network in terms of connnections. Uses fingertable to lookup and send incomming requests and replies to the right node.
+
 *v1.3*
 Adds changelog.
 

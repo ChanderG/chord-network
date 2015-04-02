@@ -30,6 +30,7 @@
 using namespace std;
 
 /* Handle an incomming share request 
+ * DEPRECATED in favour of handleReqShare2
  */
 void handleReqShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo ){
   Comm messrep;
@@ -63,8 +64,47 @@ void handleReqShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &s
   }
 }
 
+/* Handle an incomming share request adapted to chord network
+ */
+void handleReqShare2(Comm &mess, Node &self){
+  Comm messrep;
+  NodeClientSocket ncs;
+  //made a full loop => not available anywhere
+  if(mess.src == self.getSimpleId()){
+    cout << "Error in chord network." << endl;
+    //pass the message back
+    bzero(messrep.ipaddr,MAXIPLEN); 
+
+    messrep.type = REP_SHARE;
+    messrep.src = mess.src;
+    strcpy(messrep.ipaddr, "Error. File not indexed." );
+    ncs = self.getNodeSocketFor(mess.src);
+    sendCommStruct(ncs, messrep);
+  }  
+  //check if the file has been indexed in this node
+  else if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
+    self.addToIndex(string(mess.filename), string(mess.ipaddr));
+    cout << "File " << mess.filename << " indexed. " << endl;
+    //send a reply
+    bzero(messrep.comment,256); 
+
+    messrep.type = REP_SHARE;
+    messrep.src = mess.src;
+    strcpy(messrep.comment, "File successfully indexed." );
+    ncs = self.getNodeSocketFor(mess.src);
+    sendCommStruct(ncs, messrep);
+  }
+  else{
+    //not in this node
+    //forward the message
+    ncs = self.getNodeSocketFor(mess.filehash);
+    sendCommStruct( ncs, mess);
+  }
+}
+
 
 /* Handle an incomming search request 
+ * DEPRECATED in favour of handleReqSearch2
  */
 void handleReqSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo ){
   //made a full loop => not available anywhere
@@ -98,8 +138,47 @@ void handleReqSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &
   }
 }
 
+/* Handle an incomming search request adapted to chord network
+ */
+void handleReqSearch2(Comm &mess, Node &self){
+  //made a full loop => not available anywhere
+  Comm messrep;
+  NodeClientSocket ncs;
+  if(mess.src == self.getSimpleId()){
+    cout << "File not in chord network." << endl;
+    //pass the message back
+    bzero(messrep.ipaddr,MAXIPLEN); 
+
+    messrep.type = REP_SEARCH;
+    messrep.src = mess.src;
+    strcpy(messrep.ipaddr, "NOT FOUND" );
+    ncs = self.getNodeSocketFor(mess.src);
+    sendCommStruct(ncs, messrep);
+  }  
+  //check if the file needs to be added to this node
+  else if((mess.filehash > self.getPredecessor()->getSimpleId()) && (mess.filehash <= self.getSimpleId())){
+    string ip = self.getFromIndex(string(mess.filename));
+    cout << "IP with required file " << mess.filename << " is " << ip << endl;
+    //send a reply
+    bzero(messrep.ipaddr,MAXIPLEN); 
+
+    messrep.type = REP_SEARCH;
+    messrep.src = mess.src;
+    strcpy(messrep.ipaddr, ip.c_str());
+    ncs = self.getNodeSocketFor(mess.src);
+    sendCommStruct(ncs, messrep);
+  }
+  else{
+    //not in this node
+    //forward the message
+    ncs = self.getNodeSocketFor(mess.filehash);
+    sendCommStruct( ncs, mess);
+  }
+}
+
 
 /* Handle an incomming share reply 
+ * DEPRECATED in favour of handleRepShare2
  */
 void handleRepShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo ){
   // this message is meant for us
@@ -113,8 +192,25 @@ void handleRepShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &s
   }
 }
 
+/* Handle an incomming share reply adapted to chord network
+ */
+void handleRepShare2(Comm &mess, Node &self){
+  // this message is meant for us
+  if(mess.src == self.getSimpleId()){
+    cout << mess.comment << endl;
+  }  
+  else{
+    //simply pass it along
+    //the pred addr
+    NodeClientSocket ncs;
+    ncs = self.getNodeSocketFor(mess.src);
+    sendCommStruct(ncs, mess);
+  }
+}
+
 
 /* Handle an incomming search reply 
+ * DEPRECATED in favour of handleRepSearch2
  */
 void handleRepSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo ){
   // this message is meant for us
@@ -125,6 +221,22 @@ void handleRepSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &
     //simply pass it along
     //the pred addr
     sendComm(predSockFd, predAddrInfo, mess);
+  }
+}
+
+/* Handle an incomming search reply adapted to chord network
+ */
+void handleRepSearch2(Comm &mess, Node &self){
+  // this message is meant for us
+  if(mess.src == self.getSimpleId()){
+    cout << "File found in : " << mess.ipaddr << endl;
+  }  
+  else{
+    //simply pass it along
+    //the pred addr
+    NodeClientSocket ncs;
+    ncs = self.getNodeSocketFor(mess.src);
+    sendCommStruct(ncs, mess);
   }
 }
 
@@ -142,19 +254,23 @@ void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, str
     
     switch(mess.type){
       case REQ_SHARE: {
-			handleReqShare(mess, self,succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			//handleReqShare(mess, self,succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			handleReqShare2(mess, self);
 			break;
 		      }
       case REQ_SEARCH: {
-			handleReqSearch(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			//handleReqSearch(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			handleReqSearch2(mess,self);
 			break;
 		      }
       case REP_SHARE: {
-			handleRepShare(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			//handleRepShare(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			handleRepShare2(mess,self);
 			break;
 		      }
       case REP_SEARCH: {
-			handleRepSearch(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			//handleRepSearch(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+			handleRepSearch2(mess,self);
 			break;
 		      }
       default: break;		      

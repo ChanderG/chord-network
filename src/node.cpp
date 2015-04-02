@@ -233,8 +233,5 @@ NodeClientSocket Node::getNodeSocketFor(int filehash){
       //break;
     }
   }
-  NodeClientSocket ncs;
-  ncs.sockfd = -1;
-  ncs.addrInfo = NULL;
-  return (ncs);
+  return nodesockets[prev(fingertable.end())->second];
 }
