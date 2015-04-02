@@ -52,3 +52,12 @@ void recvComm(int &sockfd, Comm &msg){
     exit(1);
   }
 }
+
+/*
+ * Wrapper over sendComm function for ease
+ * INPUT:  NodeClientSocket struct
+ *         Comm message        
+ */        
+void sendCommStruct(struct NodeClientSocket &ncs, Comm &msg){
+  sendComm(ncs.sockfd, ncs.addrInfo, msg);
+}

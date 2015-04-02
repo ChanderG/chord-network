@@ -85,5 +85,10 @@ void sendComm(int &sockfd, struct addrinfo* &p, Comm &msg);
  */
 void recvComm(int &sockfd, Comm &msg);
 
-//need an alternative command to send the reverse way
-//for this we need the addr returned in recvComm
+/*
+ * Wrapper over sendComm function for ease
+ * INPUT:  NodeClientSocket struct
+ *         Comm message        
+ */        
+void sendCommStruct(struct NodeClientSocket &ncs, Comm &msg);
+
