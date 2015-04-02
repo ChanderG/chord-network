@@ -23,6 +23,7 @@
 /*
  * For all communication structures and helper functions.
  */
+#include "node.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
