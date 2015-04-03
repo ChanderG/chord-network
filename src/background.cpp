@@ -240,17 +240,26 @@ void handleRepSearch2(Comm &mess, Node &self){
   }
 }
 
+/*
+ * Handle request from a new node for joining
+ * We need to vet the candidate completely then send it the required information.
+ */ 
+void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, vector<Node> &nodes){
+  //WIP    
+}
 
 /*
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo){
+void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo, vector<Node> &nodes){
   cout << "Chord maintainance work." << endl;
 
   Comm mess;
+  struct sockaddr_in saddr;
   while(1){
-    recvComm(sockfd, mess);
+    //recvComm(sockfd, mess);
+    recvCommFrom(sockfd, mess, saddr);
     
     switch(mess.type){
       case REQ_SHARE: {
@@ -280,6 +289,7 @@ void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, str
 		       //and then tells all old members this info
 		       //adds the node to it's own list
 		       //and triggers recalculation of fingettable
+		       handleReqJoin(mess, self, saddr, nodes);
 		       break;
 		     }
       case CTRL_JOIN: {

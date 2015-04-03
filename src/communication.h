@@ -90,6 +90,8 @@ struct Comm{
  * Meta communication type.
  * Used when new nodes want to join.
  * The type field represents the type of control packet.
+ * For maintinaing simplicity, a new node first makes contact using the REQ_JOIN
+ * then subequent dealings are done with this ChordMeta type packets
  */
 struct ChordMeta{
   chordmeta_type type;
@@ -122,4 +124,4 @@ void sendCommStruct(struct NodeClientSocket &ncs, Comm &msg);
 /*
  * Wrapper to recieve message along with the sender info
  */
-void recvCommFrom(int &sockfd, Comm &msg, struct sockaddr_in sendera);
+void recvCommFrom(int &sockfd, Comm &msg, struct sockaddr_in &sendera);

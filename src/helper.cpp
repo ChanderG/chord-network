@@ -21,6 +21,7 @@
  */
 
 #include "helper.h"
+#include "communication.h"
 
 #include "hash.h"
 
@@ -139,16 +140,35 @@ void readConfiguration(int &n, int &m, vector<Node> &nodes){
  * Contact a suspected member of the ring, to get complete info about the chord
  * Info that we would otherwise have got from a config file.
  * The contact would have to take care that the new guy fits with the network.
- * INPUT: ip   : ipaddr of suspect  
+ * INPUT: self : self node
+ *        ip   : ipaddr of suspect  
  *        port : port of the same 
  *        m    : number of peers including self  
  *        n    : size of the chord
  *        nodes: the list if all nodes including self
  */
-void startupFromExisting(string ip, int port, int &n, int &m, vector<Node> &nodes){
+void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector<Node> &nodes){
   //eshtablish a connection with the contact
   //send a join request to the contact
   cout << "WIP" << endl;
+
+  //our contact in the ring
+  Node contact(ip, port);
+  int csockfd;
+  struct addrinfo* caddrInfo;
+
+  //open our communication channel to our contact
+  initSocketClientToNode(contact, csockfd, caddrInfo);
+
+  //send a REQ_JOIN message
+  Comm joinreq;
+  joinreq.type = REQ_JOIN;
+  joinreq.src = self.getPort();
+  strcpy(joinreq.ipaddr, self.getIp().c_str());
+  
+  sendComm(csockfd, caddrInfo, joinreq);
+
+  //now switch to recieving the other format
 }
 
 

@@ -108,7 +108,7 @@ int main(int argc, char* argv[]){
 	return 0;
       }
 
-      startupFromExisting(dip, dport, n, m, nodes);
+      startupFromExisting(self, dip, dport, n, m, nodes);
       return 0;
     }
     else{
@@ -165,7 +165,7 @@ int main(int argc, char* argv[]){
   initSocketClientToNode(*(self.getSuccessor()), succSockFd, succAddrInfo);
   initSocketSelfServer(self, sockfd);
 
-  thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
+  thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo, nodes);
   thread foreground(manageNodeTerminal, chordLength, self, succSockFd, succAddrInfo);  
 
   foreground.join();
