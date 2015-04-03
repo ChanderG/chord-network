@@ -82,6 +82,8 @@ void readConfiguration(int &n, int &m, vector<Node> &nodes){
   string ip;
   int port;
 
+  int chordLength;
+
   string commentPrefix = ";";
   string param_chordSize = "chordSize";
   string param_numPeers = "numPeers";
@@ -99,6 +101,7 @@ void readConfiguration(int &n, int &m, vector<Node> &nodes){
       ss >> n;
       ss.clear();
       cout << "Extracted n: " << n << endl;
+      chordLength = pow(2, n);
     }
 
     if(line.compare(0, param_numPeers.length(), param_numPeers) == 0){
@@ -107,6 +110,7 @@ void readConfiguration(int &n, int &m, vector<Node> &nodes){
       ss >> m;
       ss.clear();
       cout << "Extracted m: " << m << endl;
+
 
       //also read the next m lines for the nodes
       for(int i = 0;i < m; i++){
@@ -126,6 +130,7 @@ void readConfiguration(int &n, int &m, vector<Node> &nodes){
 
 	Node newnode(ip, port);
 	newnode.setID(hashNode(ip,port));
+	newnode.setSimpleId(chordLength);
         nodes.push_back(newnode);
 
       }

@@ -62,7 +62,13 @@ class Node{
   std::map<int, Node> fingertable;
   std::map<Node, NodeClientSocket> nodesockets;
 
+  int m; //the number of peers
+  int n; //the size of the chord
+
   public:
+
+  std::vector<Node> nodes;  // all the nodes
+
   /*
    * Main constructor
    * INPUT: Normalized ip and port
@@ -169,6 +175,26 @@ class Node{
    * Get the greatest entry in the fingertable smaller than the query.
    */ 
   NodeClientSocket getNodeSocketFor(int filehash);
+
+  /*
+   * Simple setval function.
+   */ 
+  void setN(int n);
+
+  /*
+   * Simple setval function.
+   */ 
+  void setM(int m);
+
+  /*
+   * Simple getval function.
+   */ 
+  int getN();
+
+  /*
+   * Simple getval function.
+   */ 
+  int getM();
 };
 
 

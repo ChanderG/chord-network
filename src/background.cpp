@@ -23,10 +23,12 @@
 #include "background.h"
 
 #include "communication.h"
+#include "helper.h"
 
 #include <iostream>
 #include <cstring>
 #include <sys/select.h>
+#include <cmath>
 using namespace std;
 
 /* Handle an incomming share request 
@@ -244,15 +246,32 @@ void handleRepSearch2(Comm &mess, Node &self){
  * Handle request from a new node for joining
  * We need to vet the candidate completely then send it the required information.
  */ 
-void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, vector<Node> &nodes){
-  //WIP    
+void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr){
+  identifier id = hashNode(mess.ipaddr, mess.src);
+  int chordLength = pow(2, self.getN());
+  int simpleid = id % chordLength;
+
+  for(vector<Node>::iterator it = self.nodes.begin(); it != slef.nodes.end(); it++){
+    if(it->getSimpleId() == simpleid){
+      //we have a problem
+      //send a reject message right back
+      //and exit here
+    }
+  }
+
+  //success
+  //increment m and add this node to our list
+  //send a success token first
+  //followed by n, m and all m machines
+  // and then send this info to all peers who can simply add to their m and nodes
+  // whithout any extra checking
 }
 
 /*
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo, vector<Node> &nodes){
+void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo){
   cout << "Chord maintainance work." << endl;
 
   Comm mess;
@@ -289,7 +308,7 @@ void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, str
 		       //and then tells all old members this info
 		       //adds the node to it's own list
 		       //and triggers recalculation of fingettable
-		       handleReqJoin(mess, self, saddr, nodes);
+		       handleReqJoin(mess, self, saddr);
 		       break;
 		     }
       case CTRL_JOIN: {

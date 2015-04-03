@@ -122,6 +122,10 @@ int main(int argc, char* argv[]){
     readConfiguration(n, m, nodes);
   }
 
+  //we have n, m and nodes in hand
+  self.setN(n);
+  self.setM(m);
+
   int chordLength = pow(2, n);
 
   self.setSimpleId(chordLength);
@@ -147,6 +151,9 @@ int main(int argc, char* argv[]){
     exit(0);
   }
 
+  //nodes are ready
+  self.nodes = nodes;
+
   self.setupFingerTable(nodes, n, chordLength);
 
   setupPredAndSucc(self, nodes);
@@ -165,7 +172,7 @@ int main(int argc, char* argv[]){
   initSocketClientToNode(*(self.getSuccessor()), succSockFd, succAddrInfo);
   initSocketSelfServer(self, sockfd);
 
-  thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo, nodes);
+  thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
   thread foreground(manageNodeTerminal, chordLength, self, succSockFd, succAddrInfo);  
 
   foreground.join();

@@ -235,3 +235,31 @@ NodeClientSocket Node::getNodeSocketFor(int filehash){
   }
   return nodesockets[prev(fingertable.end())->second];
 }
+
+/*
+ * Simple setval function.
+ */ 
+void Node::setN(int n){
+  this->n = n;
+}
+
+/*
+ * Simple setval function.
+ */ 
+void Node::setM(int m){
+  this->m = m;
+}
+
+/*
+ * Simple getval function.
+ */ 
+int Node::getN(){
+  return n;
+}
+
+/*
+ * Simple getval function.
+ */ 
+int Node::getM(){
+  return m;
+}

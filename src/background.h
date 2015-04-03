@@ -27,10 +27,8 @@
 
 #include "node.h"
 
-#include <vector>
-
 /*
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo, std::vector<Node> &nodes);
+void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo);
