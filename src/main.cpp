@@ -25,10 +25,12 @@
 #include "helper.h"
 #include "background.h"
 #include "foreground.h"
+#include "help.h"
 
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <sstream>
 #include <vector>
 #include <algorithm>
@@ -43,16 +45,13 @@ using namespace std;
  */
 int main(int argc, char* argv[]){
 
-  if(argc < 2){
-    cout << "Incorrect ususage!!" << endl;
-    cout << "./main <port>" << endl;
-    cout << "<port> : refers to the port to use for connecting to the chord network" << endl;
-    cout << "Note a valid config.chord file needs to be present for the software to work correctly." << endl;
-    /*
-    cout << "<file.txt> : needs to have all peers in this network in form of" << endl;
-    cout << "\t<ip> <port> " << endl;
-    cout << "\tone on each line." << endl;
-    */
+  if(argc == 1){
+    printHelpPrompt();
+    return 0;
+  }
+
+  if(strcmp(argv[1], "--help") == 0){
+    printHelpMessage();
     return 0;
   }
 
@@ -78,6 +77,20 @@ int main(int argc, char* argv[]){
   identifier id = hashNode(ip, port);
   cout << "Identifier hash is " << id << endl;
   self.setID(id);
+
+  //if extra flags were present
+  if(argc > 2){
+    if(strcmp(argv[2], "-j") == 0){
+      //parse the extra info
+      cout << "WIP." << endl;
+      return 0;
+    }
+    else{
+      cout << "Invalid option: " << argv[2] << endl;
+      printHelpPrompt();
+      return 0;
+    }
+  }
 
   int n;  // the chord size 
   int m;  // the number of nodes in the network 
