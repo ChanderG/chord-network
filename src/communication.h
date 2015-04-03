@@ -32,7 +32,12 @@
 /*
  * Identifier of class of message.
  */
-enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE };
+enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE, REQ_JOIN, CTRL_JOIN };
+
+/*
+ * Identifier of meta/control packet.
+ */
+enum chordmeta_type  { JOIN_ACCEPT, JOIN_REJECT, JOIN_CHORDSIZE, JOIN_NONODES, JOIN_NODEINFO };
 
 /*
  * Some constants for eshtablishing uniformity in communictaions.
@@ -63,6 +68,14 @@ enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE };
  * type : REP_SHARE
  * src : orig node; where the reply must be sent to
  * comment : any extra comments; say file indexing success
+ *
+ * type : REQ_JOIN
+ * src : port of machine that wants to join
+ * ipaddr : ip address of machine that wants to join
+ *
+ * type : CTRL_JOIN
+ * src : port of machine that wants to join
+ * ipaddr : ip address of machine that wants to join
  */
 struct Comm{
   comm_type type;
@@ -70,6 +83,19 @@ struct Comm{
   char ipaddr[MAXIPLEN];
   char filename[MAXFILENAME];
   int filehash;
+  char comment[256];
+};
+
+/*
+ * Meta communication type.
+ * Used when new nodes want to join.
+ * The type field represents the type of control packet.
+ */
+struct ChordMeta{
+  chordmeta_type type;
+  int payload;
+  char ipaddr[MAXIPLEN];
+  int port;
   char comment[256];
 };
 

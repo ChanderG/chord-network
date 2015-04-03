@@ -29,7 +29,10 @@ Though a node could theoretically reply via it's bound socket, that is not being
 The perl script simulator.pl spins up the same program on different terminal simultaneously by using a different port on each instance all controllable from the conf/config.chord file. Each IP:Port in the file is considered a different virtual machine. Use with a tiling window manager for best effects. 
 
 ## Part 2: Finger tables and dynamic nodes 
-WIP.
+
+For the dynamic nodes, the changes in plan are as follows. The program will now have 2 different ways of starting. If called without a flag, the program reads the config file and goes ahead. If called with a flag, we need to input an ip:port pair that is a valid member of an existing chord network. Then that nodes after checking everything initiates the newcomer into the circle.
+
+As of now, the network has to be booted with a config file.
 
 
 ###CHANGELOG

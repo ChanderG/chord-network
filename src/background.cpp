@@ -273,6 +273,21 @@ void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, str
 			handleRepSearch2(mess,self);
 			break;
 		      }
+      case REQ_JOIN: {
+		       //a new node sends to one of the members
+		       //who responds will all required info to setup
+		       //assuming that everything is OK aka the hash value etc
+		       //and then tells all old members this info
+		       //adds the node to it's own list
+		       //and triggers recalculation of fingettable
+		       break;
+		     }
+      case CTRL_JOIN: {
+			//a peer wants to inform us about a new node
+			// contains IP and port, add to your node list
+			// retrigger fingertable calculation
+			break;
+		      }
       default: break;		      
     }
   }
