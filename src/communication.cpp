@@ -61,3 +61,14 @@ void recvComm(int &sockfd, Comm &msg){
 void sendCommStruct(struct NodeClientSocket &ncs, Comm &msg){
   sendComm(ncs.sockfd, ncs.addrInfo, msg);
 }
+
+/*
+ * Wrapper to recieve message along with the sender info
+ */
+void recvCommFrom(int &sockfd, Comm &msg, struct sockaddr_in &sendera){
+  int sizeof_sendera = sizeof(struct sockaddr);
+  if(-1 == recvfrom(sockfd, &msg, sizeof(msg), 0, (struct sockaddr *)&sendera, (socklen_t*)&sizeof_sendera)){
+    perror("recvfrom");  
+    exit(1);
+  }
+}

@@ -119,3 +119,7 @@ void recvComm(int &sockfd, Comm &msg);
  */        
 void sendCommStruct(struct NodeClientSocket &ncs, Comm &msg);
 
+/*
+ * Wrapper to recieve message along with the sender info
+ */
+void recvCommFrom(int &sockfd, Comm &msg, struct sockaddr_in sendera);
