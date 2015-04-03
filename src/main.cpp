@@ -78,11 +78,37 @@ int main(int argc, char* argv[]){
   cout << "Identifier hash is " << id << endl;
   self.setID(id);
 
+  int n;  // the chord size 
+  int m;  // the number of nodes in the network 
+  vector<Node> nodes;  //the m nodes 
+
   //if extra flags were present
   if(argc > 2){
     if(strcmp(argv[2], "-j") == 0){
       //parse the extra info
-      cout << "WIP." << endl;
+      // not available
+      if(argc == 4){
+	cout << "Invalid input." << endl;
+	printHelpPrompt();
+	return 0;
+      }
+
+      //all good to go
+      string dip(argv[3]);
+      int dport;
+
+      ss << argv[4];
+      ss >> dport;
+      ss.clear();
+
+      cout << "Target IP recogonized as: " << dip << endl;
+      cout << "Target port recogonized as: " << dport << endl; 
+      if(dport <= 0 || dport > 65535){
+	cout << "Specified port is invalid. Try again." << endl;
+	return 0;
+      }
+
+      startupFromExisting(dip, dport, n, m, nodes);
       return 0;
     }
     else{
@@ -91,12 +117,11 @@ int main(int argc, char* argv[]){
       return 0;
     }
   }
+  else{
+    // simple use case
+    readConfiguration(n, m, nodes);
+  }
 
-  int n;  // the chord size 
-  int m;  // the number of nodes in the network 
-  vector<Node> nodes;  //the m nodes 
-
-  readConfiguration(n, m, nodes);
   int chordLength = pow(2, n);
 
   self.setSimpleId(chordLength);
