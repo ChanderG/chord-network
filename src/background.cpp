@@ -310,33 +310,28 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, struct addrinfo* &succAddrInfo, int &predSockFd, struct addrinfo* &predAddrInfo){
+void manageChord(int &chordLength, Node &self, int &sockfd){
   cout << "Chord maintainance work." << endl;
 
   Comm mess;
   struct sockaddr_in saddr;
   while(1){
-    //recvComm(sockfd, mess);
     recvCommFrom(sockfd, mess, saddr);
     
     switch(mess.type){
       case REQ_SHARE: {
-			//handleReqShare(mess, self,succSockFd, succAddrInfo, predSockFd, predAddrInfo);
 			handleReqShare2(mess, self);
 			break;
 		      }
       case REQ_SEARCH: {
-			//handleReqSearch(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
 			handleReqSearch2(mess,self);
 			break;
 		      }
       case REP_SHARE: {
-			//handleRepShare(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
 			handleRepShare2(mess,self);
 			break;
 		      }
       case REP_SEARCH: {
-			//handleRepSearch(mess,self, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
 			handleRepSearch2(mess,self);
 			break;
 		      }

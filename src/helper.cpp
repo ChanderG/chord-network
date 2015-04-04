@@ -198,13 +198,7 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
       exit(1);
     }
     cout << "Recieved chord size aka n: " << joinrep.payload << endl;
-    self.setN(joinrep.payload);
-
-    int chordLength = pow(2, self.getN());
-    // set the simple id
-    identifier id = hashNode(self.getIp(), self.getPort() );
-    self.setID(id);
-    self.setSimpleId(chordLength);
+    n = joinrep.payload;
 
     recvChordMeta(csockfd, joinrep);
     if(joinrep.type != JOIN_NONODES){
@@ -212,7 +206,7 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
       exit(1);
     }
     cout << "Recieved no of nodes aka m: " << joinrep.payload << endl;
-    self.setM(joinrep.payload);
+    m = joinrep.payload;
     
   }
   else{

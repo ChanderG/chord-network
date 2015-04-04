@@ -213,7 +213,7 @@ void handleSearch2(int &chordLength, Node &self){
  * Main user terminal
  * INPUT: the chord length and the current node
  */
-void manageNodeTerminal(int &chordLength, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo){
+void manageNodeTerminal(int &chordLength, Node &self){
   cout << "Node user interface work." << endl;
 
   int choice;

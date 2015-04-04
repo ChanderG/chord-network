@@ -156,30 +156,18 @@ int main(int argc, char* argv[]){
 
   self.setupFingerTable(nodes, n, chordLength);
 
-  setupPredAndSucc(self, nodes);
-
-  cout << "Predecessor node: " << self.getPredecessor()->getSimpleId() << endl;
-  cout << "Successor node: " << self.getSuccessor()->getSimpleId() << endl;
-
   //setup the sockets
   int sockfd;
-  int succSockFd;
-  struct addrinfo* succAddrInfo;
-  int predSockFd;
-  struct addrinfo* predAddrInfo;
 
-  initSocketClientToNode(*(self.getPredecessor()), predSockFd, predAddrInfo);
-  initSocketClientToNode(*(self.getSuccessor()), succSockFd, succAddrInfo);
   initSocketSelfServer(self, sockfd);
 
-  thread background(manageChord, chordLength, self, sockfd, succSockFd, succAddrInfo, predSockFd, predAddrInfo);
-  thread foreground(manageNodeTerminal, chordLength, self, succSockFd, succAddrInfo);  
+  thread background(manageChord, chordLength, self, sockfd);
+  thread foreground(manageNodeTerminal, chordLength, self);  
 
   foreground.join();
   cout << "Shutting down node terminal." << endl;
   background.join();
 
-  closeSockets(sockfd, succSockFd);
   self.closeSockets(sockfd);
 
   return 0;
