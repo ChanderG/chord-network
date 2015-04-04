@@ -110,7 +110,6 @@ int main(int argc, char* argv[]){
       }
 
       startupFromExisting(self, dip, dport, n, m, nodes);
-      return 0;
     }
     else{
       cout << "Invalid option: " << argv[2] << endl;

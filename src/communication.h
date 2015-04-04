@@ -101,6 +101,10 @@ struct Comm{
  *
  * type: JOIN_NONODES
  * payload: m aka number of nodes (latest aka including self) 
+ *
+ * type: JOIN_NODEINFO
+ * ipaddr: ip address of node
+ * port: port of node
  */
 struct ChordMeta{
   chordmeta_type type;

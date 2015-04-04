@@ -279,5 +279,10 @@ void Node::incM(){
 void Node::reinit(){
   sort(nodes.begin(), nodes.end());   //sort according to simpleId
   int chordLength = pow(2, n);
+  for(map<Node, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
+    close(it->second.sockfd);
+  }
+  nodesockets.clear();
+  fingertable.clear();
   setupFingerTable(nodes, n, chordLength);
 }

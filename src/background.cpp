@@ -268,7 +268,10 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
   //create a new node to represent this newcomer
   Node newnode(mess.ipaddr, mess.src);
   newnode.setID(id);
-  newnode.setSimpleId(simpleid);
+  newnode.setSimpleId(chordLength);
+
+  cout << "New node accepted with values: " << endl;
+  cout << mess.ipaddr << " : " << mess.src << " " << newnode.getSimpleId() << endl;
 
   //success
   //increment m and add this node to our list
@@ -298,8 +301,17 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
   //add it to your nodes set
   self.nodes.push_back(newnode);
   //retrigger your sorting etc and reinit fingertable 
+  self.reinit();
   //send the entire nodes to the newcomer
+  repl.type = JOIN_NODEINFO;
+  for(int i = 0;i < self.getM();i++){
+    bzero(repl.ipaddr, MAXIPLEN);
+    strcpy(repl.ipaddr, self.nodes[i].getIp().c_str());
+    repl.port = self.nodes[i].getPort();
+    sendChordMeta(sockfd, saddr, repl);
+  }
   //it creates its node vector and retriggers
+  
   //send the new node to all others, so that they do the same
   //they can simply inc m and retrigger changes
   

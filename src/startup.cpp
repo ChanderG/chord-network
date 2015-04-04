@@ -190,6 +190,19 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
     }
     cout << "Recieved no of nodes aka m: " << joinrep.payload << endl;
     m = joinrep.payload;
+
+    int chordLength = pow(2, n);
+
+    for(int i =0;i < m;i++){
+      //recieve node info
+      recvChordMeta(csockfd, joinrep);
+      //create nodes 
+      Node newnode(joinrep.ipaddr, joinrep.port);
+      newnode.setID(hashNode(joinrep.ipaddr, joinrep.port));
+      newnode.setSimpleId(chordLength);
+      //insert into nodes vector
+      nodes.push_back(newnode);
+    }
     
   }
   else{
