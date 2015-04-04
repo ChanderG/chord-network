@@ -263,3 +263,10 @@ int Node::getN(){
 int Node::getM(){
   return m;
 }
+
+/*
+ * Simple inc function: as new nodes coming in is a very important req
+ */
+void Node::incM(){
+  m++;
+}

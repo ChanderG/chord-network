@@ -277,6 +277,20 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
   bzero(repl.comment, 256);
   strcpy(repl.comment, "Wait for further instructions.");
   sendChordMeta(sockfd, saddr, repl);
+
+  //now send n 
+  repl.type = JOIN_CHORDSIZE;
+  repl.payload = self.getN();
+  sendChordMeta(sockfd, saddr, repl);
+
+  //now increment m
+  self.incM();
+  // and send it
+  repl.type = JOIN_NONODES;
+  repl.payload = self.getM();
+  sendChordMeta(sockfd, saddr, repl);
+
+  //add this new node
 }
 
 /*

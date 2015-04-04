@@ -195,6 +195,11 @@ class Node{
    * Simple getval function.
    */ 
   int getM();
+
+  /*
+   * Simple inc function: as new nodes coming in is a very important req
+   */
+  void incM();
 };
 
 

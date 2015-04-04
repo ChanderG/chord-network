@@ -192,13 +192,32 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
     cout << "COMMENT: " << joinrep.comment << endl;
 
     //recieve for further details
+    recvChordMeta(csockfd, joinrep);
+    if(joinrep.type != JOIN_CHORDSIZE){
+      cout << "Error in communication of CHORDSIZE." << endl;
+      exit(1);
+    }
+    cout << "Recieved chord size aka n: " << joinrep.payload << endl;
+    self.setN(joinrep.payload);
+
+    int chordLength = pow(2, self.getN());
+    // set the simple id
+    self.setSimpleId(chordLength);
+
+    recvChordMeta(csockfd, joinrep);
+    if(joinrep.type != JOIN_NONODES){
+      cout << "Error in communication of NONODES." << endl;
+      exit(1);
+    }
+    cout << "Recieved no of nodes aka m: " << joinrep.payload << endl;
+    self.setM(joinrep.payload);
+
+    
   }
   else{
     cout << "Error in response." << endl;
     exit(1);
   }
-
-
 }
 
 

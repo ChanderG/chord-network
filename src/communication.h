@@ -95,6 +95,12 @@ struct Comm{
  *
  * type: JOIN_REJECT
  * comment: any comments why the applicant got rejected
+ *
+ * type: JOIN_CHORDSIZE
+ * payload: n aka chord size
+ *
+ * type: JOIN_NONODES
+ * payload: m aka number of nodes (latest aka including self) 
  */
 struct ChordMeta{
   chordmeta_type type;
