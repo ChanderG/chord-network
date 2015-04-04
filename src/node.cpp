@@ -28,6 +28,7 @@
 #include <string>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -269,4 +270,14 @@ int Node::getM(){
  */
 void Node::incM(){
   m++;
+}
+
+/*
+ * When a new node is allowed in, to include it in the setup.
+ * Typically called after a new node is pushed into the nodes list
+ */ 
+void Node::reinit(){
+  sort(nodes.begin(), nodes.end());   //sort according to simpleId
+  int chordLength = pow(2, n);
+  setupFingerTable(nodes, n, chordLength);
 }

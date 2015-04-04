@@ -202,6 +202,8 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
 
     int chordLength = pow(2, self.getN());
     // set the simple id
+    identifier id = hashNode(self.getIp(), self.getPort() );
+    self.setID(id);
     self.setSimpleId(chordLength);
 
     recvChordMeta(csockfd, joinrep);
@@ -211,7 +213,6 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
     }
     cout << "Recieved no of nodes aka m: " << joinrep.payload << endl;
     self.setM(joinrep.payload);
-
     
   }
   else{

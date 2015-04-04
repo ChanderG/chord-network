@@ -200,6 +200,12 @@ class Node{
    * Simple inc function: as new nodes coming in is a very important req
    */
   void incM();
+
+  /*
+   * When a new node is allowed in, to include it in the setup.
+   * Typically called after a new node is pushed into the nodes list
+   */ 
+  void reinit();
 };
 
 

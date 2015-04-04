@@ -34,6 +34,9 @@ For the dynamic nodes, the changes in plan are as follows. The program will now 
 
 As of now, the network has to be booted with a config file.
 
+####Known Issues
+* If 2 nodes apply to join at the same time, they both may be entered with the same id which will lead to unpredictable performance. In real life, the probabilities are low for this kind of thing to happen.
+
 
 ###CHANGELOG
 
