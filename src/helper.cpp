@@ -84,6 +84,9 @@ void setupPredAndSucc(Node &self, vector<Node> &nodes){
     cout << "Update the file and try again. " << endl;
     exit(0);
   }
+
+  //testing predecessor
+  cout << "Predecessor : " << self.getPredecessor()->getIp() << ": " << self.getPredecessor()->getPort() << " " << self.getPredecessor()->getSimpleId() << endl;
 }
 
 /*

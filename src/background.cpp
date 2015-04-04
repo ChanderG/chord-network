@@ -314,8 +314,44 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
   
   //send the new node to all others, so that they do the same
   //they can simply inc m and retrigger changes
-  
+  Comm alert;
+  alert.type = CTRL_JOIN;
+  alert.src = mess.src;
+  bzero(alert.ipaddr, MAXIPLEN);
+  strcpy(alert.ipaddr, mess.ipaddr);
+  for(vector<Node>::iterator it = self.nodes.begin();it != self.nodes.end();it++){
+    //need to send to all nodes
+    NodeClientSocket ncs;
+    initSocketClientToNode(*it, ncs.sockfd, ncs.addrInfo);
+    sendCommStruct(ncs, alert);
+    close(ncs.sockfd);
+  }
+
   //then the existing file index transfer has to be done
+}
+
+/*
+ * Handle control packet from a peer informing of an accepted new node.
+ */ 
+void handleCtrlJoin(Comm &mess, Node &self){
+  identifier id = hashNode(mess.ipaddr, mess.src);
+  int chordLength = pow(2, self.getN());
+
+  //create a new node to represent this newcomer
+  Node newnode(mess.ipaddr, mess.src);
+  newnode.setID(id);
+  newnode.setSimpleId(chordLength);
+
+  cout << "New node accepted with values: " << endl;
+  cout << mess.ipaddr << " : " << mess.src << " " << newnode.getSimpleId() << endl;
+
+  //now increment m
+  self.incM();
+
+  //add it to your nodes set
+  self.nodes.push_back(newnode);
+  //retrigger your sorting etc and reinit fingertable 
+  self.reinit();
 }
 
 /*
@@ -329,6 +365,7 @@ void manageChord(int &chordLength, Node &self, int &sockfd){
   struct sockaddr_in saddr;
   while(1){
     recvCommFrom(sockfd, mess, saddr);
+    //recvComm(sockfd, mess);
     
     switch(mess.type){
       case REQ_SHARE: {
@@ -361,6 +398,7 @@ void manageChord(int &chordLength, Node &self, int &sockfd){
 			//a peer wants to inform us about a new node
 			// contains IP and port, add to your node list
 			// retrigger fingertable calculation
+			handleCtrlJoin(mess, self);
 			break;
 		      }
       default: break;		      

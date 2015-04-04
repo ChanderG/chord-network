@@ -278,6 +278,7 @@ void Node::incM(){
  */ 
 void Node::reinit(){
   sort(nodes.begin(), nodes.end());   //sort according to simpleId
+  setupPredAndSucc(*this, nodes);
   int chordLength = pow(2, n);
   for(map<Node, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
     close(it->second.sockfd);

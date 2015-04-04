@@ -74,8 +74,8 @@ enum chordmeta_type  { JOIN_ACCEPT, JOIN_REJECT, JOIN_CHORDSIZE, JOIN_NONODES, J
  * ipaddr : ip address of machine that wants to join
  *
  * type : CTRL_JOIN
- * src : port of machine that wants to join
- * ipaddr : ip address of machine that wants to join
+ * src : port of accepted newcomer
+ * ipaddr : ip address of accepted newcomer
  */
 struct Comm{
   comm_type type;

@@ -156,8 +156,17 @@ int main(int argc, char* argv[]){
 
   self.setupFingerTable(nodes, n, chordLength);
 
+  setupPredAndSucc(self, nodes);
+
   //setup the sockets
   int sockfd;
+  int succSockFd;
+  struct addrinfo* succAddrInfo;
+  int predSockFd;
+  struct addrinfo* predAddrInfo;
+
+  initSocketClientToNode(*(self.getPredecessor()), predSockFd, predAddrInfo);
+  initSocketClientToNode(*(self.getSuccessor()), succSockFd, succAddrInfo);
 
   initSocketSelfServer(self, sockfd);
 
