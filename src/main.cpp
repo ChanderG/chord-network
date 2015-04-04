@@ -26,6 +26,7 @@
 #include "background.h"
 #include "foreground.h"
 #include "help.h"
+#include "startup.h"
 
 #include <iostream>
 #include <fstream>
