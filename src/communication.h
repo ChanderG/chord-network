@@ -92,6 +92,8 @@ struct Comm{
  * The type field represents the type of control packet.
  * For maintinaing simplicity, a new node first makes contact using the REQ_JOIN
  * then subequent dealings are done with this ChordMeta type packets
+ *
+ * type: JOIN_REJECT
  */
 struct ChordMeta{
   chordmeta_type type;
@@ -125,3 +127,15 @@ void sendCommStruct(struct NodeClientSocket &ncs, Comm &msg);
  * Wrapper to recieve message along with the sender info
  */
 void recvCommFrom(int &sockfd, Comm &msg, struct sockaddr_in &sendera);
+
+/*
+ * Wrapper to send a chord meta via socket.
+ * INPUT: the socket fd, the socket addrinfo and the message structure 
+ */
+void sendChordMeta(int &sockfd, struct sockaddr_in &sa, ChordMeta &msg);
+
+/*
+ * Wrapper to recv a chord meta via socket.
+ * INPUT: the socket fd and the message structure 
+ */
+void recvChordMeta(int &sockfd, ChordMeta &msg);
