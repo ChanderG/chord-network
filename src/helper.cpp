@@ -165,6 +165,7 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
 
   //open our communication channel to our contact
   initSocketClientToNode(contact, csockfd, caddrInfo);
+  //TODO: if target does not exist print some message and exit
 
   //send a REQ_JOIN message
   Comm joinreq;
@@ -172,9 +173,32 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
   joinreq.src = self.getPort();
   strcpy(joinreq.ipaddr, self.getIp().c_str());
   
+  //send a normal request
   sendComm(csockfd, caddrInfo, joinreq);
 
   //now switch to recieving the other format
+  ChordMeta joinrep;  
+
+  //first get conformation/ rejection
+  recvChordMeta(csockfd, joinrep);
+
+  if(joinrep.type == JOIN_REJECT){
+    cout << "Request rejected." << endl; 
+    cout << "COMMENT: " << joinrep.comment << endl;
+    exit(1);
+  }
+  else if(joinrep.type == JOIN_ACCEPT){
+    cout << "Application accepted." << endl;
+    cout << "COMMENT: " << joinrep.comment << endl;
+
+    //recieve for further details
+  }
+  else{
+    cout << "Error in response." << endl;
+    exit(1);
+  }
+
+
 }
 
 

@@ -94,6 +94,7 @@ struct Comm{
  * then subequent dealings are done with this ChordMeta type packets
  *
  * type: JOIN_REJECT
+ * comment: any comments why the applicant got rejected
  */
 struct ChordMeta{
   chordmeta_type type;

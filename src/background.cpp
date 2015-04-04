@@ -246,16 +246,22 @@ void handleRepSearch2(Comm &mess, Node &self){
  * Handle request from a new node for joining
  * We need to vet the candidate completely then send it the required information.
  */ 
-void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr){
+void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockfd){
   identifier id = hashNode(mess.ipaddr, mess.src);
   int chordLength = pow(2, self.getN());
   int simpleid = id % chordLength;
 
-  for(vector<Node>::iterator it = self.nodes.begin(); it != slef.nodes.end(); it++){
+  ChordMeta repl;
+
+  for(vector<Node>::iterator it = self.nodes.begin(); it != self.nodes.end(); it++){
     if(it->getSimpleId() == simpleid){
       //we have a problem
       //send a reject message right back
       //and exit here
+      repl.type = JOIN_REJECT;
+      bzero(repl.comment, 256);
+      strcpy(repl.comment, "Node with same hash value exists in network.");
+      sendChordMeta(sockfd, saddr, repl);
     }
   }
 
@@ -265,6 +271,12 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr){
   //followed by n, m and all m machines
   // and then send this info to all peers who can simply add to their m and nodes
   // whithout any extra checking
+  
+  //sending success token
+  repl.type = JOIN_ACCEPT;
+  bzero(repl.comment, 256);
+  strcpy(repl.comment, "Wait for further instructions.");
+  sendChordMeta(sockfd, saddr, repl);
 }
 
 /*
@@ -308,7 +320,7 @@ void manageChord(int &chordLength, Node &self, int &sockfd, int &succSockFd, str
 		       //and then tells all old members this info
 		       //adds the node to it's own list
 		       //and triggers recalculation of fingettable
-		       handleReqJoin(mess, self, saddr);
+		       handleReqJoin(mess, self, saddr, sockfd);
 		       break;
 		     }
       case CTRL_JOIN: {
