@@ -157,13 +157,18 @@ bool operator==(const Node& first, const Node& second){
  * Setup finger table given set of all nodes.
  */
 void Node::setupFingerTable(vector<Node> nodes, int chordSize, int chordLength){
+
   int offset = -1;
+  /*
   for(unsigned int i = 0; i < nodes.size(); i++){
     if(nodes[i].getSimpleId() == simpleId){
       offset = i;
       break;
     }
   }
+  */
+
+  offset = simpleId;
 
   if(offset == -1){
     //cannot happen
@@ -227,14 +232,27 @@ void Node::closeSockets(int &sockfd){
  * Get the greatest entry in the fingertable smaller than the query.
  */ 
 NodeClientSocket Node::getNodeSocketFor(int filehash){
-  for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
+  map<int, Node>::iterator startit = fingertable.find(simpleId + 1);
+  if(startit->first > filehash) {
+    cout << "Going to " << prev(startit)->second.getSimpleId() << endl;
+    return nodesockets[prev(startit)->second];
+  }
+
+  map<int, Node>::iterator it = startit++;
+  startit--;
+  
+  for(;it != startit; it++){
+    if(it == fingertable.end())
+      it = fingertable.begin();
     if(it->first > filehash) {
       //the prev element is the one
+      cout << "Going to " << prev(it)->second.getSimpleId() << endl;
       return nodesockets[prev(it)->second];
       //break;
     }
   }
-  return nodesockets[prev(fingertable.end())->second];
+  cout << "Going to " << prev(it)->second.getSimpleId() << endl;
+  return nodesockets[prev(it)->second];
 }
 
 /*
