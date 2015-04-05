@@ -160,13 +160,9 @@ int main(int argc, char* argv[]){
 
   //setup the sockets
   int sockfd;
-  int succSockFd;
-  struct addrinfo* succAddrInfo;
-  int predSockFd;
-  struct addrinfo* predAddrInfo;
 
-  initSocketClientToNode(*(self.getPredecessor()), predSockFd, predAddrInfo);
-  initSocketClientToNode(*(self.getSuccessor()), succSockFd, succAddrInfo);
+  initSocketClientToNode(*(self.getPredecessor()), self.predSockFd, self.predAddrInfo);
+  initSocketClientToNode(*(self.getSuccessor()), self.succSockFd, self.succAddrInfo);
 
   initSocketSelfServer(self, sockfd);
 
@@ -178,6 +174,7 @@ int main(int argc, char* argv[]){
   background.join();
 
   self.closeSockets(sockfd);
+  closeNormalSockets(self.predSockFd, self.succSockFd);
 
   return 0;
 

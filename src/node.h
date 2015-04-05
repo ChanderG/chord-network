@@ -67,6 +67,11 @@ class Node{
 
   public:
 
+  int succSockFd;
+  struct addrinfo* succAddrInfo;
+  int predSockFd;
+  struct addrinfo* predAddrInfo;
+
   std::vector<Node> nodes;  // all the nodes
 
   /*

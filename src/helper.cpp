@@ -152,7 +152,7 @@ void initSocketClientToNode(Node &destNode, int &sockFd, struct addrinfo* &addrI
 /*
  * Close both sockets.
  */
-void closeSockets(int &predSockFd, int &succSockFd){
+void closeNormalSockets(int &predSockFd, int &succSockFd){
 
   close(predSockFd);
   close(succSockFd);
