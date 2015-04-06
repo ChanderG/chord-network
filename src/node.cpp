@@ -159,6 +159,9 @@ bool operator==(const Node& first, const Node& second){
 void Node::setupFingerTable(vector<Node> nodes, int chordSize, int chordLength){
 
   int offset = -1;
+
+  //WHICH IF THESE 2 IS RIGHT?
+
   /*
   for(unsigned int i = 0; i < nodes.size(); i++){
     if(nodes[i].getSimpleId() == simpleId){
@@ -168,6 +171,8 @@ void Node::setupFingerTable(vector<Node> nodes, int chordSize, int chordLength){
   }
   */
 
+  /*
+  */
   offset = simpleId;
 
   if(offset == -1){
@@ -208,9 +213,18 @@ void Node::setupFingerTable(vector<Node> nodes, int chordSize, int chordLength){
 void Node::setupNodesockets(){
   for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
     //node in question -> it->second  
-    NodeClientSocket ncs;
-    initSocketClientToNode(it->second, ncs.sockfd, ncs.addrInfo);
-    nodesockets.insert(pair<Node, NodeClientSocket>(it->second, ncs));
+    //TODO:check if that node already has a socket, if so use the same ncs
+    /*
+    if(prev(it)->second.getSimpleId() == it->second.getSimpleId()){
+      nodesockets.insert(pair<int, NodeClientSocket>(it->second.getSimpleId(), nodesockets.find(prev(it)->second.getSimpleId())->second));
+    }
+    */
+    //else{
+      NodeClientSocket ncs;
+      initSocketClientToNode(it->second, ncs.sockfd, ncs.addrInfo);
+    
+      nodesockets.insert(pair<int, NodeClientSocket>(it->second.getSimpleId(), ncs));
+    //}
   }
 }
 
@@ -222,7 +236,7 @@ void Node::closeSockets(int &sockfd){
   //close the main server socket
   close(sockfd);
   //now all the ones with an entry in the nodesockets table
-  for(map<Node, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
+  for(map<int, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
     close(it->second.sockfd);
   }
 }
@@ -234,11 +248,12 @@ void Node::closeSockets(int &sockfd){
 NodeClientSocket Node::getNodeSocketFor(int filehash){
   map<int, Node>::iterator startit = fingertable.find(simpleId + 1);
   if(startit->first > filehash) {
-    cout << "Going to " << prev(startit)->second.getSimpleId() << endl;
-    return nodesockets[prev(startit)->second];
+    cout << "Going to(1) " << prev(startit)->second.getSimpleId() << endl;
+    //return nodesockets[prev(startit)->second.getSimpleId()];
+    return nodesockets.find(prev(startit)->second.getSimpleId())->second;
   }
 
-  map<int, Node>::iterator it = startit++;
+  map<int, Node>::iterator it = ++startit;
   startit--;
   
   for(;it != startit; it++){
@@ -246,13 +261,15 @@ NodeClientSocket Node::getNodeSocketFor(int filehash){
       it = fingertable.begin();
     if(it->first > filehash) {
       //the prev element is the one
-      cout << "Going to " << prev(it)->second.getSimpleId() << endl;
-      return nodesockets[prev(it)->second];
+      cout << "Going to(2) " << prev(it)->second.getSimpleId() << endl;
+      //return nodesockets[prev(it)->second.getSimpleId()];
+      return nodesockets.find(prev(it)->second.getSimpleId())->second;
       //break;
     }
   }
-  cout << "Going to " << prev(it)->second.getSimpleId() << endl;
-  return nodesockets[prev(it)->second];
+  cout << "Going to(3) " << prev(it)->second.getSimpleId() << endl;
+  //return nodesockets[prev(it)->second.getSimpleId()];
+  return nodesockets.find(prev(it)->second.getSimpleId())->second;
 }
 
 /*
@@ -303,7 +320,7 @@ void Node::reinit(){
   initSocketClientToNode(*(getSuccessor()), succSockFd, succAddrInfo);
 
   int chordLength = pow(2, n);
-  for(map<Node, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
+  for(map<int, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
     close(it->second.sockfd);
   }
   nodesockets.clear();

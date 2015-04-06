@@ -119,7 +119,7 @@ void handleShare2(int &chordLength, Node &self){
 
   NodeClientSocket ncs = self.getNodeSocketFor(filehash);
   sendCommStruct(ncs, mess);
-  cout << "Sent to successor" << endl;
+  cout << "Sent to next node" << endl;
 
   return;
 }

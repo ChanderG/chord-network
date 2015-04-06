@@ -60,7 +60,7 @@ class Node{
 
   std::map<std::string,std::string> index;
   std::map<int, Node> fingertable;
-  std::map<Node, NodeClientSocket> nodesockets;
+  std::map<int, NodeClientSocket> nodesockets;
 
   int m; //the number of peers
   int n; //the size of the chord

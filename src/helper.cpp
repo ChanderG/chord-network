@@ -146,6 +146,7 @@ void initSocketClientToNode(Node &destNode, int &sockFd, struct addrinfo* &addrI
     cout << "Failed to create socket to succecessor. Check if the node is up" << endl;
     exit(1);
   }
+
   freeaddrinfo(servinfo);
 }
 
