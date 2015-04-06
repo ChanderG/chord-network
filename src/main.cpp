@@ -46,6 +46,8 @@ using namespace std;
  */
 mutex selfmtx;
 
+Node self;
+
 /* The main module represnting a peer.
  * INPUT: port number, list of all machines on the Chord network
  * ACTION: setup this node, connect to next and prev nodes, interact with user to share/search for files
@@ -79,7 +81,7 @@ int main(int argc, char* argv[]){
     return 0;
   }
 
-  Node self(ip,port);
+  self.setup(ip, port);
 
   identifier id = hashNode(ip, port);
   cout << "Identifier hash is " << id << endl;
