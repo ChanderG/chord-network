@@ -31,6 +31,8 @@
 #include <cmath>
 using namespace std;
 
+extern Node self;
+
 /* Handle an incomming share request 
  * DEPRECATED in favour of handleReqShare2
  */
@@ -68,7 +70,7 @@ void handleReqShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &s
 
 /* Handle an incomming share request adapted to chord network
  */
-void handleReqShare2(Comm &mess, Node &self){
+void handleReqShare2(Comm &mess){
   Comm messrep;
   NodeClientSocket ncs;
   //made a full loop => not available anywhere
@@ -142,7 +144,7 @@ void handleReqSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &
 
 /* Handle an incomming search request adapted to chord network
  */
-void handleReqSearch2(Comm &mess, Node &self){
+void handleReqSearch2(Comm &mess){
   //made a full loop => not available anywhere
   Comm messrep;
   NodeClientSocket ncs;
@@ -199,7 +201,7 @@ void handleRepShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &s
 
 /* Handle an incomming share reply adapted to chord network
  */
-void handleRepShare2(Comm &mess, Node &self){
+void handleRepShare2(Comm &mess){
   // this message is meant for us
   if(mess.src == self.getSimpleId()){
     cout << mess.comment << endl;
@@ -231,7 +233,7 @@ void handleRepSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &
 
 /* Handle an incomming search reply adapted to chord network
  */
-void handleRepSearch2(Comm &mess, Node &self){
+void handleRepSearch2(Comm &mess){
   // this message is meant for us
   if(mess.src == self.getSimpleId()){
     cout << "File found in : " << mess.ipaddr << endl;
@@ -249,7 +251,7 @@ void handleRepSearch2(Comm &mess, Node &self){
  * Handle request from a new node for joining
  * We need to vet the candidate completely then send it the required information.
  */ 
-void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockfd){
+void handleReqJoin(Comm &mess, struct sockaddr_in &saddr, int &sockfd){
   identifier id = hashNode(mess.ipaddr, mess.src);
   int chordLength = pow(2, self.getN());
   int simpleid = id % chordLength;
@@ -340,7 +342,7 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
 /*
  * Handle control packet from a peer informing of an accepted new node.
  */ 
-void handleCtrlJoin(Comm &mess, Node &self){
+void handleCtrlJoin(Comm &mess){
   identifier id = hashNode(mess.ipaddr, mess.src);
   int chordLength = pow(2, self.getN());
 
@@ -365,7 +367,7 @@ void handleCtrlJoin(Comm &mess, Node &self){
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self, int &sockfd){
+void manageChord(int &chordLength, int &sockfd){
   cout << "Chord maintainance work." << endl;
 
   Comm mess;
@@ -376,19 +378,19 @@ void manageChord(int &chordLength, Node &self, int &sockfd){
     
     switch(mess.type){
       case REQ_SHARE: {
-			handleReqShare2(mess, self);
+			handleReqShare2(mess);
 			break;
 		      }
       case REQ_SEARCH: {
-			handleReqSearch2(mess,self);
+			handleReqSearch2(mess);
 			break;
 		      }
       case REP_SHARE: {
-			handleRepShare2(mess,self);
+			handleRepShare2(mess);
 			break;
 		      }
       case REP_SEARCH: {
-			handleRepSearch2(mess,self);
+			handleRepSearch2(mess);
 			break;
 		      }
       case REQ_JOIN: {
@@ -398,14 +400,14 @@ void manageChord(int &chordLength, Node &self, int &sockfd){
 		       //and then tells all old members this info
 		       //adds the node to it's own list
 		       //and triggers recalculation of fingettable
-		       handleReqJoin(mess, self, saddr, sockfd);
+		       handleReqJoin(mess, saddr, sockfd);
 		       break;
 		     }
       case CTRL_JOIN: {
 			//a peer wants to inform us about a new node
 			// contains IP and port, add to your node list
 			// retrigger fingertable calculation
-			handleCtrlJoin(mess, self);
+			handleCtrlJoin(mess);
 			break;
 		      }
       default: break;		      

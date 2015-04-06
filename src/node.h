@@ -81,6 +81,16 @@ class Node{
   Node(std::string ip, int port);
 
   /*
+   * Simple contructor
+   */
+  Node();
+
+  /*
+   * To construct a node .
+   */
+  void setup(std::string ip, int port);
+
+  /*
    * Getval for ip
    */
   std::string getIp();

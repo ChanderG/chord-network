@@ -31,4 +31,4 @@
  * Main function
  * INPUT: the chord length and the current node
  */
-void manageChord(int &chordLength, Node &self, int &sockfd);
+void manageChord(int &chordLength, int &sockfd);

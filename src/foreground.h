@@ -33,4 +33,4 @@
  * Main user terminal
  * INPUT: the chord length and the current node
  */
-void manageNodeTerminal(int &chordLength, Node &self);
+void manageNodeTerminal(int &chordLength);

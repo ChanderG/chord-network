@@ -27,11 +27,13 @@
 #include <cstring>
 using namespace std;
 
+extern Node self;
+
 /*
  * Handle sharing. Needs to take inputs
  * DEPRECATED : use handleShare2 for taking chord route instead of direct 
  */
-void handleShare(int &chordLength, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo){
+void handleShare(int &chordLength, int &succSockFd, struct addrinfo* &succAddrInfo){
   string fileName;
   cout << "Enter file name: "; 
   cin >> fileName;
@@ -79,7 +81,7 @@ void handleShare(int &chordLength, Node &self, int &succSockFd, struct addrinfo*
  * Handle sharing in the new chord network. Needs to take inputs
  * Passes along message using chord protocol
  */
-void handleShare2(int &chordLength, Node &self){
+void handleShare2(int &chordLength){
   string fileName;
   cout << "Enter file name: "; 
   cin >> fileName;
@@ -132,7 +134,7 @@ void handleShare2(int &chordLength, Node &self){
  * Handle searching. Needs to take inputs
  * DEPRECATED : use handleSearch2 for taking chord route instead of direct 
  */
-void handleSearch(int &chordLength, Node &self, int &succSockFd, struct addrinfo* &succAddrInfo){
+void handleSearch(int &chordLength, int &succSockFd, struct addrinfo* &succAddrInfo){
   string fileName;
   cout << "Enter file name: "; 
   cin >> fileName;
@@ -174,7 +176,7 @@ void handleSearch(int &chordLength, Node &self, int &succSockFd, struct addrinfo
  * Handle searching in the chord network. Needs to take inputs
  * Passes along message using chord protocol
  */
-void handleSearch2(int &chordLength, Node &self){
+void handleSearch2(int &chordLength){
   string fileName;
   cout << "Enter file name: "; 
   cin >> fileName;
@@ -219,7 +221,7 @@ void handleSearch2(int &chordLength, Node &self){
  * Main user terminal
  * INPUT: the chord length and the current node
  */
-void manageNodeTerminal(int &chordLength, Node &self){
+void manageNodeTerminal(int &chordLength){
   cout << "Node user interface work." << endl;
 
   int choice;
@@ -251,12 +253,12 @@ void manageNodeTerminal(int &chordLength, Node &self){
       switch(choice){
 	case 1: {
 		  //handleSearch(chordLength, self, succSockFd, succAddrInfo);
-		  handleSearch2(chordLength, self);
+		  handleSearch2(chordLength);
 		  break;
 		}		
 	case 2: {
 		  //handleShare(chordLength, self, succSockFd, succAddrInfo);
-		  handleShare2(chordLength, self);
+		  handleShare2(chordLength);
 		  break;
 		}		
 	case 3: {
