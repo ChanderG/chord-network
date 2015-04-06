@@ -248,9 +248,16 @@ void Node::closeSockets(int &sockfd){
 NodeClientSocket Node::getNodeSocketFor(int filehash){
   map<int, Node>::iterator startit = fingertable.find(simpleId + 1);
   if(startit->first > filehash) {
-    cout << "Going to(1) " << prev(startit)->second.getSimpleId() << endl;
-    //return nodesockets[prev(startit)->second.getSimpleId()];
-    return nodesockets.find(prev(startit)->second.getSimpleId())->second;
+    if(startit != fingertable.begin()){
+      cout << "Going to(1A) " << prev(startit)->second.getSimpleId() << endl;
+      //return nodesockets[prev(startit)->second.getSimpleId()];
+      return nodesockets.find(prev(startit)->second.getSimpleId())->second;
+    }
+    else{
+      cout << "Going to(1B) " << prev(fingertable.end())->second.getSimpleId() << endl;
+      //return nodesockets[prev(startit)->second.getSimpleId()];
+      return nodesockets.find(prev(fingertable.end())->second.getSimpleId())->second;
+    }
   }
 
   map<int, Node>::iterator it = ++startit;
@@ -261,15 +268,24 @@ NodeClientSocket Node::getNodeSocketFor(int filehash){
       it = fingertable.begin();
     if(it->first > filehash) {
       //the prev element is the one
-      cout << "Going to(2) " << prev(it)->second.getSimpleId() << endl;
-      //return nodesockets[prev(it)->second.getSimpleId()];
-      return nodesockets.find(prev(it)->second.getSimpleId())->second;
-      //break;
+      if(it != fingertable.begin()){
+	cout << "Going to(2A) " << prev(it)->second.getSimpleId() << endl;
+	return nodesockets.find(prev(it)->second.getSimpleId())->second;
+      }
+      else{
+	cout << "Going to(2B) " << prev(fingertable.end())->second.getSimpleId() << endl;
+	return nodesockets.find(prev(fingertable.end())->second.getSimpleId())->second;
+      }
     }
   }
-  cout << "Going to(3) " << prev(it)->second.getSimpleId() << endl;
-  //return nodesockets[prev(it)->second.getSimpleId()];
-  return nodesockets.find(prev(it)->second.getSimpleId())->second;
+  if(it != fingertable.begin()){
+    cout << "Going to(3A) " << prev(it)->second.getSimpleId() << endl;
+    return nodesockets.find(prev(it)->second.getSimpleId())->second;
+  }  
+  else{
+    cout << "Going to(3B) " << prev(fingertable.end())->second.getSimpleId() << endl;
+    return nodesockets.find(prev(fingertable.end())->second.getSimpleId())->second;
+  }
 }
 
 /*

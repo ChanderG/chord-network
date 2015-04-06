@@ -199,6 +199,8 @@ void handleSearch2(int &chordLength, Node &self){
   mess.type = REQ_SEARCH;
   mess.src = self.getSimpleId();
 
+  cout << "Preparing search request:  REQ_SEARCH " << mess.src << endl;
+
   bzero(mess.filename, MAXFILENAME);
   strcpy(mess.filename, fileName.c_str());
   cout << mess.filename << endl;
