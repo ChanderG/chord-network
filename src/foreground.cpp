@@ -118,6 +118,10 @@ void handleShare2(int &chordLength, Node &self){
   mess.filehash = filehash;
 
   NodeClientSocket ncs = self.getNodeSocketFor(filehash);
+
+  cout << "Finger table in fg:" << endl;
+  self.printFingertable();
+
   sendCommStruct(ncs, mess);
   cout << "Sent to next node" << endl;
 

@@ -198,9 +198,7 @@ void Node::setupFingerTable(vector<Node> nodes, int chordSize, int chordLength){
   }
 
   cout << "The completed finger table is: " << endl;
-  for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
-    cout << it->first << " -> " << it->second.getSimpleId() << endl;
-  }
+  printFingertable();
 
   //opening sockets to all clients
   setupNodesockets();
@@ -342,4 +340,13 @@ void Node::reinit(){
   nodesockets.clear();
   fingertable.clear();
   setupFingerTable(nodes, n, chordLength);
+}
+
+/*
+ * Display current finger table.
+ */ 
+void Node::printFingertable(){
+  for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
+    cout << it->first << " -> " << it->second.getSimpleId() << endl;
+  }
 }

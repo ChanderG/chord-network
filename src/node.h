@@ -211,6 +211,11 @@ class Node{
    * Typically called after a new node is pushed into the nodes list
    */ 
   void reinit();
+
+  /*
+   * Display current finger table.
+   */ 
+  void printFingertable();
 };
 
 
