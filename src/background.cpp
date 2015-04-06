@@ -29,7 +29,10 @@
 #include <cstring>
 #include <sys/select.h>
 #include <cmath>
+#include <mutex>
 using namespace std;
+
+extern mutex selfmtx;
 
 /* Handle an incomming share request 
  * DEPRECATED in favour of handleReqShare2
@@ -71,6 +74,7 @@ void handleReqShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &s
 void handleReqShare2(Comm &mess, Node &self){
   Comm messrep;
   NodeClientSocket ncs;
+  selfmtx.lock();
   //made a full loop => not available anywhere
   if(mess.src == self.getSimpleId()){
     cout << "Error in chord network." << endl;
@@ -102,6 +106,7 @@ void handleReqShare2(Comm &mess, Node &self){
     ncs = self.getNodeSocketFor(mess.filehash);
     sendCommStruct( ncs, mess);
   }
+  selfmtx.unlock();
 }
 
 
@@ -146,6 +151,7 @@ void handleReqSearch2(Comm &mess, Node &self){
   //made a full loop => not available anywhere
   Comm messrep;
   NodeClientSocket ncs;
+  selfmtx.lock();
   if(mess.src == self.getSimpleId()){
     cout << "File not in chord network." << endl;
     //pass the message back
@@ -167,7 +173,7 @@ void handleReqSearch2(Comm &mess, Node &self){
     messrep.type = REP_SEARCH;
     messrep.src = mess.src;
 
-    cout << " Preparing message: REP_SHARE to " << mess.src << endl; 
+    cout << "Preparing message: REP_SHARE to " << mess.src << endl; 
 
     strcpy(messrep.ipaddr, ip.c_str());
     ncs = self.getNodeSocketFor(mess.src);
@@ -179,6 +185,7 @@ void handleReqSearch2(Comm &mess, Node &self){
     ncs = self.getNodeSocketFor(mess.filehash);
     sendCommStruct( ncs, mess);
   }
+  selfmtx.unlock();
 }
 
 
@@ -201,6 +208,7 @@ void handleRepShare(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &s
  */
 void handleRepShare2(Comm &mess, Node &self){
   // this message is meant for us
+  selfmtx.lock();
   if(mess.src == self.getSimpleId()){
     cout << mess.comment << endl;
   }  
@@ -211,6 +219,7 @@ void handleRepShare2(Comm &mess, Node &self){
     ncs = self.getNodeSocketFor(mess.src);
     sendCommStruct(ncs, mess);
   }
+  selfmtx.unlock();
 }
 
 
@@ -233,6 +242,7 @@ void handleRepSearch(Comm &mess, Node &self, int &succSockFd, struct addrinfo* &
  */
 void handleRepSearch2(Comm &mess, Node &self){
   // this message is meant for us
+  selfmtx.lock();
   if(mess.src == self.getSimpleId()){
     cout << "File found in : " << mess.ipaddr << endl;
   }  
@@ -243,6 +253,7 @@ void handleRepSearch2(Comm &mess, Node &self){
     ncs = self.getNodeSocketFor(mess.src);
     sendCommStruct(ncs, mess);
   }
+  selfmtx.unlock();
 }
 
 /*
@@ -250,6 +261,7 @@ void handleRepSearch2(Comm &mess, Node &self){
  * We need to vet the candidate completely then send it the required information.
  */ 
 void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockfd){
+  selfmtx.lock();
   identifier id = hashNode(mess.ipaddr, mess.src);
   int chordLength = pow(2, self.getN());
   int simpleid = id % chordLength;
@@ -335,12 +347,14 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
 
   //then the existing file index transfer has to be done
   //TODO
+  selfmtx.unlock();
 }
 
 /*
  * Handle control packet from a peer informing of an accepted new node.
  */ 
 void handleCtrlJoin(Comm &mess, Node &self){
+  selfmtx.lock();
   identifier id = hashNode(mess.ipaddr, mess.src);
   int chordLength = pow(2, self.getN());
 
@@ -359,6 +373,7 @@ void handleCtrlJoin(Comm &mess, Node &self){
   self.nodes.push_back(newnode);
   //retrigger your sorting etc and reinit fingertable 
   self.reinit();
+  selfmtx.unlock();
 }
 
 /*

@@ -25,7 +25,10 @@
 #include <iostream>
 #include <cstdio>
 #include <cstring>
+#include <mutex>
 using namespace std;
+
+extern mutex selfmtx;
 
 /*
  * Handle sharing. Needs to take inputs
@@ -80,6 +83,7 @@ void handleShare(int &chordLength, Node &self, int &succSockFd, struct addrinfo*
  * Passes along message using chord protocol
  */
 void handleShare2(int &chordLength, Node &self){
+  selfmtx.lock();
   string fileName;
   cout << "Enter file name: "; 
   cin >> fileName;
@@ -125,6 +129,7 @@ void handleShare2(int &chordLength, Node &self){
   sendCommStruct(ncs, mess);
   cout << "Sent to next node" << endl;
 
+  selfmtx.unlock();
   return;
 }
 
@@ -175,6 +180,7 @@ void handleSearch(int &chordLength, Node &self, int &succSockFd, struct addrinfo
  * Passes along message using chord protocol
  */
 void handleSearch2(int &chordLength, Node &self){
+  selfmtx.lock();
   string fileName;
   cout << "Enter file name: "; 
   cin >> fileName;
@@ -213,6 +219,7 @@ void handleSearch2(int &chordLength, Node &self){
 
   NodeClientSocket ncs = self.getNodeSocketFor(filehash);
   sendCommStruct(ncs, mess);
+  selfmtx.unlock();
 }
 
 /*

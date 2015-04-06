@@ -37,8 +37,14 @@
 #include <algorithm>
 #include <cmath>
 #include <thread>
+#include <mutex>
 
 using namespace std;
+
+/*
+ * For mutex of self node.
+ */
+mutex selfmtx;
 
 /* The main module represnting a peer.
  * INPUT: port number, list of all machines on the Chord network

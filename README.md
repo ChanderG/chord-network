@@ -37,6 +37,9 @@ As of now, the network has to be booted with a config file.
 ####Known Issues
 * If 2 nodes apply to join at the same time, they both may be entered with the same id which will lead to unpredictable performance. In real life, the probabilities are low for this kind of thing to happen.
 
+###ISSUES
+* Only some connections seem to work. Need to test exhaustively.
+
 
 ###CHANGELOG
 
