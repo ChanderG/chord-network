@@ -167,7 +167,7 @@ void handleReqSearch2(Comm &mess, Node &self){
     messrep.type = REP_SEARCH;
     messrep.src = mess.src;
 
-    cout << " Preparing message: REP_SHARE to " << mess.src << endl; 
+    cout << "Preparing message: REP_SHARE to " << mess.src << endl; 
 
     strcpy(messrep.ipaddr, ip.c_str());
     ncs = self.getNodeSocketFor(mess.src);

@@ -262,38 +262,54 @@ void Node::closeSockets(int &sockfd){
  * Get the greatest entry in the fingertable smaller than the query.
  */ 
 NodeClientSocket Node::getNodeSocketFor(int filehash){
+  /*
+   * Seems complex. But the idea is to iterate over the elements of the map 
+   * in a sequential order starting from self's successor.
+   * Honestly needed a circular map data structure.
+   */
+
   map<int, Node>::iterator startit = fingertable.find(simpleId + 1);
-  if(startit->first > filehash) {
-    if(startit != fingertable.begin()){
+
+  if(startit != fingertable.begin()){
+    if((startit->first > filehash) && (prev(startit)->first <= filehash)){
       cout << "Going to(1A) " << prev(startit)->second.getSimpleId() << endl;
-      //return nodesockets[prev(startit)->second.getSimpleId()];
       return nodesockets.find(prev(startit)->second.getSimpleId())->second;
     }
-    else{
+  }
+  else{
+    if((startit->first > filehash) && (prev(fingertable.end())->first <= filehash)){
       cout << "Going to(1B) " << prev(fingertable.end())->second.getSimpleId() << endl;
-      //return nodesockets[prev(startit)->second.getSimpleId()];
       return nodesockets.find(prev(fingertable.end())->second.getSimpleId())->second;
     }
   }
+
+  cout << "Checked 1 routes.." << endl;
 
   map<int, Node>::iterator it = ++startit;
   startit--;
   
   for(;it != startit; it++){
-    if(it == fingertable.end())
+    if(it == fingertable.end()){
+      if(startit == fingertable.begin())
+	break;
       it = fingertable.begin();
-    if(it->first > filehash) {
-      //the prev element is the one
-      if(it != fingertable.begin()){
+    }
+    if(it != fingertable.begin()){
+      if((it->first > filehash) && (prev(it)->first <= filehash)){
 	cout << "Going to(2A) " << prev(it)->second.getSimpleId() << endl;
 	return nodesockets.find(prev(it)->second.getSimpleId())->second;
       }
-      else{
+    }
+    else{
+      if((it->first > filehash) && (prev(fingertable.end())->first <= filehash)){
 	cout << "Going to(2B) " << prev(fingertable.end())->second.getSimpleId() << endl;
 	return nodesockets.find(prev(fingertable.end())->second.getSimpleId())->second;
       }
     }
   }
+
+  cout << "Checked 2 routes.." << endl;
+
   if(it != fingertable.begin()){
     cout << "Going to(3A) " << prev(it)->second.getSimpleId() << endl;
     return nodesockets.find(prev(it)->second.getSimpleId())->second;

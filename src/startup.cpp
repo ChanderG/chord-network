@@ -197,11 +197,17 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
       //recieve node info
       recvChordMeta(csockfd, joinrep);
       //create nodes 
-      Node newnode(joinrep.ipaddr, joinrep.port);
-      newnode.setID(hashNode(joinrep.ipaddr, joinrep.port));
-      newnode.setSimpleId(chordLength);
-      //insert into nodes vector
-      nodes.push_back(newnode);
+      if(joinrep.type == JOIN_NODEINFO){
+	Node newnode(joinrep.ipaddr, joinrep.port);
+	newnode.setID(hashNode(joinrep.ipaddr, joinrep.port));
+	newnode.setSimpleId(chordLength);
+	//insert into nodes vector
+	nodes.push_back(newnode);
+      }
+      else{
+	cout << "Error in response." << endl;
+	exit(1);
+      }
     }
     
   }

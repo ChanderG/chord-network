@@ -40,6 +40,9 @@ As of now, the network has to be booted with a config file.
 
 ###CHANGELOG
 
+*v2.0*
+Migrated entire setup to signals. No threads at all. Fingertables and connections are all fine. Setup for node joining is not correct.
+
 *v1.6*
 Complete chord network in terms of connnections. Uses fingertable to lookup and send incomming requests and replies to the right node.
 
