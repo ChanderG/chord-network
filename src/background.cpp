@@ -317,6 +317,7 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
   
   //send the new node to all others, so that they do the same
   //they can simply inc m and retrigger changes
+  // except for self, SHOULD not send again
   Comm alert;
   alert.type = CTRL_JOIN;
   alert.src = mess.src;
@@ -324,13 +325,16 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
   strcpy(alert.ipaddr, mess.ipaddr);
   for(vector<Node>::iterator it = self.nodes.begin();it != self.nodes.end();it++){
     //need to send to all nodes
-    NodeClientSocket ncs;
-    initSocketClientToNode(*it, ncs.sockfd, ncs.addrInfo);
-    sendCommStruct(ncs, alert);
-    close(ncs.sockfd);
+    if(it->getSimpleId() != self.getSimpleId()){
+      NodeClientSocket ncs;
+      initSocketClientToNode(*it, ncs.sockfd, ncs.addrInfo);
+      sendCommStruct(ncs, alert);
+      close(ncs.sockfd);
+    }
   }
 
   //then the existing file index transfer has to be done
+  //TODO
 }
 
 /*
