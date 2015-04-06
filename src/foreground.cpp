@@ -226,7 +226,7 @@ void manageNodeTerminal(int &chordLength, Node &self){
   int result;
   fd_set read_fds;
 
-  while(1){
+  //while(1){
     //safety value; to prevent endless loop
     choice = 0;  
 
@@ -242,7 +242,7 @@ void manageNodeTerminal(int &chordLength, Node &self){
     result = select(STDIN_FILENO + 1, &read_fds, NULL, NULL, NULL);
     if(result == -1){
       cout << "Error" << endl;
-      continue;
+      //continue;
     }
 
     if(FD_ISSET(STDIN_FILENO, &read_fds)){
@@ -265,7 +265,7 @@ void manageNodeTerminal(int &chordLength, Node &self){
 	default: cout << " Invalid option." << endl;
       }
     }
-  }
+  //}
 
   return;
 }

@@ -43,6 +43,24 @@ Node :: Node(std::string ip, int port){
 }
 
 /*
+ * Simple contructor
+ */
+Node::Node(){
+  this->id = 0;
+  this->simpleId = 0;
+}
+
+/*
+ * To construct a node .
+ */
+void Node::setup(std::string ip, int port){
+  this->ip = ip;
+  this->port = port;
+  this->id = 0;
+  this->simpleId = 0;
+}
+
+/*
  * get the address of the node in ip:port form
  */
 std::string Node::getAddress(){

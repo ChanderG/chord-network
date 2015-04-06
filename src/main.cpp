@@ -37,8 +37,18 @@
 #include <algorithm>
 #include <cmath>
 #include <thread>
+#include <csignal>
 
 using namespace std;
+
+Node self;
+int chordLength;
+
+void handleInteraction(int signal){
+  if(signal == SIGINT)
+    manageNodeTerminal(chordLength, self);  
+  return;
+}
 
 /* The main module represnting a peer.
  * INPUT: port number, list of all machines on the Chord network
@@ -73,7 +83,7 @@ int main(int argc, char* argv[]){
     return 0;
   }
 
-  Node self(ip,port);
+  self.setup(ip,port);
 
   identifier id = hashNode(ip, port);
   cout << "Identifier hash is " << id << endl;
@@ -126,7 +136,7 @@ int main(int argc, char* argv[]){
   self.setN(n);
   self.setM(m);
 
-  int chordLength = pow(2, n);
+  chordLength = pow(2, n);
 
   self.setSimpleId(chordLength);
   cout << "Looping the nodes around the chord." << endl;
@@ -166,12 +176,17 @@ int main(int argc, char* argv[]){
 
   initSocketSelfServer(self, sockfd);
 
+  signal(SIGINT, handleInteraction); 
+
+  manageChord( chordLength, self, sockfd);
+
+  /*
   thread background(manageChord, chordLength, self, sockfd);
   thread foreground(manageNodeTerminal, chordLength, self);  
-
   foreground.join();
   cout << "Shutting down node terminal." << endl;
   background.join();
+  */
 
   self.closeSockets(sockfd);
   closeNormalSockets(self.predSockFd, self.succSockFd);
