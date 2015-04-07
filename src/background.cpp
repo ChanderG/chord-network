@@ -75,6 +75,7 @@ void handleReqShare2(Comm &mess, Node &self){
   if(mess.src == self.getSimpleId()){
     cout << "Error in chord network." << endl;
     //pass the message back
+    
     bzero(messrep.ipaddr,MAXIPLEN); 
 
     messrep.type = REP_SHARE;
@@ -303,8 +304,6 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
 
   //add it to your nodes set
   self.nodes.push_back(newnode);
-  //retrigger your sorting etc and reinit fingertable 
-  self.reinit();
   //send the entire nodes to the newcomer
   repl.type = JOIN_NODEINFO;
   for(int i = 0;i < self.getM();i++){
@@ -332,6 +331,9 @@ void handleReqJoin(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockf
       close(ncs.sockfd);
     }
   }
+
+  //retrigger your sorting etc and reinit fingertable 
+  self.reinit();
 
   //then the existing file index transfer has to be done
   //TODO

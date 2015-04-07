@@ -226,6 +226,11 @@ class Node{
    * Display current finger table.
    */ 
   void printFingertable();
+
+  /*
+   * Display current nodesocket mapping.
+   */ 
+  void printNodesockets();
 };
 
 

@@ -242,6 +242,8 @@ void Node::setupNodesockets(){
       nodesockets.insert(pair<int, NodeClientSocket>(it->second.getSimpleId(), ncs));
     //}
   }
+
+  printNodesockets();
 }
 
 /*
@@ -362,11 +364,6 @@ void Node::incM(){
 void Node::reinit(){
   sort(nodes.begin(), nodes.end());   //sort according to simpleId
 
-  closeNormalSockets(predSockFd, succSockFd);
-  setupPredAndSucc(*this, nodes);
-  initSocketClientToNode(*(getPredecessor()), predSockFd, predAddrInfo);
-  initSocketClientToNode(*(getSuccessor()), succSockFd, succAddrInfo);
-
   int chordLength = pow(2, n);
   for(map<int, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
     close(it->second.sockfd);
@@ -374,6 +371,11 @@ void Node::reinit(){
   nodesockets.clear();
   fingertable.clear();
   setupFingerTable(nodes, n, chordLength);
+
+  closeNormalSockets(predSockFd, succSockFd);
+  setupPredAndSucc(*this, nodes);
+  initSocketClientToNode(*(getPredecessor()), predSockFd, predAddrInfo);
+  initSocketClientToNode(*(getSuccessor()), succSockFd, succAddrInfo);
 }
 
 /*
@@ -382,5 +384,15 @@ void Node::reinit(){
 void Node::printFingertable(){
   for(map<int, Node>::iterator it = fingertable.begin(); it != fingertable.end(); it++){
     cout << it->first << " -> " << it->second.getSimpleId() << endl;
+  }
+}
+
+/*
+ * Display current nodesocket mapping.
+ */ 
+void Node::printNodesockets(){
+  cout << "Current node socket mapping: " << endl;
+  for(map<int, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
+    cout << it->first << " " << it->second.sockfd << endl;
   }
 }
