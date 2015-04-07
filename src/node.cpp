@@ -24,6 +24,7 @@
  */
 #include "node.h"
 #include "helper.h"
+#include "hash.h"
 
 #include <string>
 #include <cmath>
@@ -395,4 +396,39 @@ void Node::printNodesockets(){
   for(map<int, NodeClientSocket>::iterator it = nodesockets.begin(); it != nodesockets.end(); it++){
     cout << it->first << " " << it->second.sockfd << endl;
   }
+}
+
+/*
+ * Update index, given a new predecessor has joined.
+ */
+map<std::string, std::string> Node::distributeIndexOnJoin(){
+
+  int chordLength = pow(2, n);
+  identifier fh ;
+  int filehash; 
+
+  map<std::string, std::string> toSend;
+
+  //main logic
+  for(map<std::string, std::string>::iterator it = index.begin();it != index.end();it++){
+    fh = hashfunc(it->first.c_str(), it->first.length());
+    //mod it to this chord network
+    filehash = fh % chordLength;
+    if((filehash > getPredecessor()->getSimpleId()) && (filehash <= getSimpleId())){
+      //belongs to this node
+
+    }
+    else{
+      //add it to the new map
+      // remove it later
+      toSend.insert(pair<string, string>(it->first, it->second));
+    }
+  }
+
+  //now for removing from this node
+  for(map<std::string, std::string>::iterator it = toSend.begin();it != toSend.end();it++){
+    index.erase(it->first);
+  }
+
+  return toSend;
 }

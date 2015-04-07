@@ -231,6 +231,11 @@ class Node{
    * Display current nodesocket mapping.
    */ 
   void printNodesockets();
+
+  /*
+   * Update index, given a new predecessor has joined.
+   */
+  std::map<std::string, std::string> distributeIndexOnJoin();
 };
 
 

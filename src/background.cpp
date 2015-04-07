@@ -381,6 +381,23 @@ void handleFileDistJoinReq(Comm &mess, Node &self, struct sockaddr_in &saddr, in
   repl.type = JOIN_DIST_SUCCESS;
   sendChordMeta(sockfd, saddr, repl);
 
+  //find the index that has to be transferred
+  // and send number first
+  
+  //delete self index
+  map<string, string> tosend = self.distributeIndexOnJoin();
+
+  repl.type = JOIN_DIST_INDEXSIZE;
+  repl.payload = tosend.size();
+  sendChordMeta(sockfd, saddr, repl);
+
+  for(map<string,string>::iterator it = tosend.begin();it != tosend.end();it++){
+    distrep.type = JOIN_DIST_INDEXENTRY;
+    strcpy(distrep.comment, it->first.c_str());
+    strcpy(distrep.ipaddr, it->second.c_str());
+
+    sendChordMeta(sockfd, saddr, repl);
+  }
 }
 
 /*

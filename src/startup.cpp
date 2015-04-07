@@ -246,6 +246,21 @@ void recieveFileIndex(Node &self){
     cout << "Request accepted. Awaiting index.." << endl; 
     
     //get further info here
+    
+    // recieve the number of files here
+    recvChordMeta(csockfd, distrep);
+    if(distrep.type == JOIN_DIST_INDEXSIZE){
+      //everything going according to plan
+      int num = distrep.payload;
+      cout << num << " file index(ices) going to be recieved." << endl;
+      
+      for(int i= 0;i < num;i++){
+	recvChordMeta(csockfd, distrep);
+        
+	//parse and add to map
+      }
+
+    }
   }
   else{
     cout << "Error in response." << endl;

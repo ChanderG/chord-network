@@ -37,7 +37,8 @@ enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE, REQ_JOIN, CTRL_JO
 /*
  * Identifier of meta/control packet.
  */
-enum chordmeta_type  { JOIN_ACCEPT, JOIN_REJECT, JOIN_CHORDSIZE, JOIN_NONODES, JOIN_NODEINFO, JOIN_DIST_SUCCESS, JOIN_DIST_REJECT };
+enum chordmeta_type  { JOIN_ACCEPT, JOIN_REJECT, JOIN_CHORDSIZE, JOIN_NONODES, JOIN_NODEINFO, JOIN_DIST_SUCCESS, JOIN_DIST_REJECT, JOIN_DIST_INDEXSIZE, JOIN_DIST_INDEXENTRY };
+
 
 /*
  * Some constants for eshtablishing uniformity in communictaions.
@@ -115,6 +116,13 @@ struct Comm{
  * type: JOIN_DIST_SUCCESS
  *
  * type: JOIN_DIST_REJECT
+ *
+ * type: JOIN_DIST_INDEXSIZE
+ * payload : number of entries going to be sent
+ *
+ * type: JOIN_DIST_INDEXENTRY
+ * ipaddr : the actual ip of machine with file aka the second of index entry
+ * comment : filename in entry
  */
 struct ChordMeta{
   chordmeta_type type;
