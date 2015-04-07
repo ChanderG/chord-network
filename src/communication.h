@@ -32,12 +32,12 @@
 /*
  * Identifier of class of message.
  */
-enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE, REQ_JOIN, CTRL_JOIN };
+enum comm_type { REQ_SEARCH, REQ_SHARE, REP_SEARCH, REP_SHARE, REQ_JOIN, CTRL_JOIN, REQ_DIST_JOIN };
 
 /*
  * Identifier of meta/control packet.
  */
-enum chordmeta_type  { JOIN_ACCEPT, JOIN_REJECT, JOIN_CHORDSIZE, JOIN_NONODES, JOIN_NODEINFO };
+enum chordmeta_type  { JOIN_ACCEPT, JOIN_REJECT, JOIN_CHORDSIZE, JOIN_NONODES, JOIN_NODEINFO, JOIN_DIST_SUCCESS, JOIN_DIST_REJECT };
 
 /*
  * Some constants for eshtablishing uniformity in communictaions.
@@ -76,6 +76,9 @@ enum chordmeta_type  { JOIN_ACCEPT, JOIN_REJECT, JOIN_CHORDSIZE, JOIN_NONODES, J
  * type : CTRL_JOIN
  * src : port of accepted newcomer
  * ipaddr : ip address of accepted newcomer
+ *
+ * type : REQ_DIST_JOIN
+ * src : requesting node 
  */
 struct Comm{
   comm_type type;
@@ -96,6 +99,9 @@ struct Comm{
  * type: JOIN_REJECT
  * comment: any comments why the applicant got rejected
  *
+ * type: JOIN_ACCEPT
+ * comment: any comments why the applicant got rejected
+ *
  * type: JOIN_CHORDSIZE
  * payload: n aka chord size
  *
@@ -105,6 +111,10 @@ struct Comm{
  * type: JOIN_NODEINFO
  * ipaddr: ip address of node
  * port: port of node
+ *
+ * type: JOIN_DIST_SUCCESS
+ *
+ * type: JOIN_DIST_REJECT
  */
 struct ChordMeta{
   chordmeta_type type;

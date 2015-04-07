@@ -209,7 +209,43 @@ void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector
 	exit(1);
       }
     }
+
+    //we recieve the files later on    
     
+  }
+  else{
+    cout << "Error in response." << endl;
+    exit(1);
+  }
+
+}
+
+/*
+ * To recieve file index that belongs to this node from successor.
+ */
+void recieveFileIndex(Node &self){
+  //now to get the file index
+  Comm distfiles;
+
+  distfiles.type = REQ_DIST_JOIN;
+  distfiles.src = self.getSimpleId();
+
+  int csockfd;
+  struct addrinfo* caddrInfo;
+ 
+  initSocketClientToNode(*self.getSuccessor(), csockfd, caddrInfo);
+  sendComm(csockfd, caddrInfo, distfiles);
+
+  ChordMeta distrep;  
+  recvChordMeta(csockfd, distrep);
+
+  if(distrep.type == JOIN_DIST_REJECT){
+    cout << "Request rejected." << endl; 
+  }
+  else if(distrep.type == JOIN_DIST_SUCCESS){
+    cout << "Request accepted. Awaiting index.." << endl; 
+    
+    //get further info here
   }
   else{
     cout << "Error in response." << endl;

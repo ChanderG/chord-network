@@ -56,6 +56,8 @@ void handleInteraction(int signal){
  */
 int main(int argc, char* argv[]){
 
+  bool existing = false;
+
   if(argc == 1){
     printHelpPrompt();
     return 0;
@@ -119,6 +121,7 @@ int main(int argc, char* argv[]){
 	return 0;
       }
 
+      existing = true;
       startupFromExisting(self, dip, dport, n, m, nodes);
     }
     else{
@@ -175,6 +178,10 @@ int main(int argc, char* argv[]){
   initSocketClientToNode(*(self.getSuccessor()), self.succSockFd, self.succAddrInfo);
 
   initSocketSelfServer(self, sockfd);
+
+  if(existing == true){
+    recieveFileIndex(self);
+  }
 
   signal(SIGINT, handleInteraction); 
 

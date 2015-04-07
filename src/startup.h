@@ -53,3 +53,8 @@ void readConfiguration(int &n, int &m, vector<Node> &nodes);
  *        nodes: the list if all nodes including self
  */
 void startupFromExisting(Node &self, string ip, int port, int &n, int &m, vector<Node> &nodes);
+
+/*
+ * To recieve file index that belongs to this node from successor.
+ */
+void recieveFileIndex(Node &self);

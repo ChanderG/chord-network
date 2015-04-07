@@ -364,6 +364,26 @@ void handleCtrlJoin(Comm &mess, Node &self){
 }
 
 /*
+ * Handle request for files from newly joined node.
+ * Has to be our predecessor
+ */
+void handleFileDistJoinReq(Comm &mess, Node &self, struct sockaddr_in &saddr, int &sockfd){
+  ChordMeta repl;
+
+  //check of it is really our predecessor
+  if(mess.src != self.getPredecessor()->getSimpleId()){
+    cout << "Wrong node contacted for file distribution." << endl;
+
+    repl.type = JOIN_DIST_REJECT;
+    sendChordMeta(sockfd, saddr, repl);
+  }
+
+  repl.type = JOIN_DIST_SUCCESS;
+  sendChordMeta(sockfd, saddr, repl);
+
+}
+
+/*
  * Main function
  * INPUT: the chord length and the current node
  */
@@ -410,6 +430,10 @@ void manageChord(int &chordLength, Node &self, int &sockfd){
 			handleCtrlJoin(mess, self);
 			break;
 		      }
+      case REQ_DIST_JOIN: {
+		       //its predecessor requests for the file index
+		       handleFileDistJoinReq(mess, self, saddr, sockfd);
+		     }
       default: break;		      
     }
   }
